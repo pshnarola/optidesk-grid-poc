@@ -1,2 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~handsontable/dist/handsontable.full.css';
+
+body {
+    font-family: Verdana, Helvetica, Arial, FreeSans, sans-serif;
+}
+
+h1 {
+    font-size: 18px;
+}
+
+hr {
+    margin: 20px 0;
+    border: 1px solid #ccc;
+}
+
+.text-bold {
+    font-weight: bold !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.w-auto {
+    width: auto !important;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+
+.w-100px {
+    width: 100px !important;
+}
+
+.excel tr:nth-child(1)>td,
+.handsontable table.htCore tr:nth-child(1)>td {
+    color: #222;
+}
+
+.handsontable table.htCore {
+    font-size: 12px;
+}
+
+.handsontable .htDimmed {
+    color: #222;
+}
+
+.handsontable span.colHeader {
+    font-weight: bold;
+}
