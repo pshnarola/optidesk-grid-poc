@@ -6,6 +6,7 @@ import { ForecastComponent } from './forecast/forecast.component';
 import { PlanviewComponent } from './planview/planview.component';
 import { PlanviewAlternativeComponent } from './planview-alternative/planview-alternative.component';
 import { HotTableModule } from '@handsontable/angular';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { HotTableModule } from '@handsontable/angular';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HotTableModule
+    HotTableModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

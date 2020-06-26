@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import Handsontable from 'handsontable';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-forecast',
@@ -7,50 +8,74 @@ import Handsontable from 'handsontable';
   styleUrls: ['./forecast.component.scss']
 })
 export class ForecastComponent implements OnInit {
-  detailset = [];
+
+  detailset = [
+    {
+      bucket: 'wk01',
+      forecast: ''
+    },
+    {
+      bucket: 'wk02',
+      forecast: ''
+    },
+    {
+      bucket: 'wk03',
+      forecast: ''
+    },
+    {
+      bucket: 'wk04',
+      forecast: ''
+    },
+    {
+      bucket: 'wk05',
+      forecast: ''
+    },
+    {
+      bucket: 'wk06',
+      forecast: ''
+    },
+    {
+      bucket: 'wk07',
+      forecast: ''
+    },
+    {
+      bucket: 'wk08',
+      forecast: ''
+    }
+  ];;
   columnObj = [];
   forecastDateSet = [];
-  constructor() { }
+  private modalRef: NgbModalRef;
+  hotSettings: Handsontable.GridSettings = {
+    data: this.detailset,
+    colHeaders: true,
+    rowHeaders: true,
+    columns: [
+      {
+        data: 'bucket',
+        title: 'PLANBUCKET',
+        readOnly: true
+      },
+      {
+        data: 'forecast',
+        title: 'FORECAST',
+        type: 'numeric'
+      },
+    ],
+    maxRows: this.detailset.length,
+    cells: (row, column, prop) => {
+      const cellProperties: any = {};
+      return cellProperties;
+    }
+  };
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit() {
     this.generateForecastGrid();
   }
 
   generateForecastGrid() {
-    this.detailset = [
-      {
-        bucket: 'wk01',
-        forecast: '1'
-      },
-      {
-        bucket: 'wk02',
-        forecast: ''
-      },
-      {
-        bucket: 'wk03',
-        forecast: ''
-      },
-      {
-        bucket: 'wk04',
-        forecast: ''
-      },
-      {
-        bucket: 'wk05',
-        forecast: ''
-      },
-      {
-        bucket: 'wk06',
-        forecast: ''
-      },
-      {
-        bucket: 'wk07',
-        forecast: ''
-      },
-      {
-        bucket: 'wk08',
-        forecast: ''
-      }
-    ];
+    // this.detailset = 
 
     let rowObj: any = {};
     this.detailset.forEach(element => {
@@ -83,11 +108,22 @@ export class ForecastComponent implements OnInit {
           let columnName = change[0][1];
           this.detailset.forEach(element => {
             if (element.bucket == columnName) {
-              element['forecast'] = newValue;
+              element['forecast'] = change[0][3];
             }
           });
         }
       }
     });
+  }
+
+  openHandsonTable(handsonContent) {
+    this.modalRef = this.modalService.open(handsonContent);
+    this.modalRef.result.then((result) => {
+    }, (reason) => {
+    });
+  }
+
+  saveForecast() {
+    this.modalRef.close();
   }
 }
