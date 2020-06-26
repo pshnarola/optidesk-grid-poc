@@ -1,1 +1,9 @@
-<p>planview works!</p>
+<h1 class="ml-3">Handson Table Update Row Implementation</h1>
+<hot-table class="hot ml-5" [hotId]="tableId"
+ [settings]="updateSettings" [data]="detailset" [colHeaders]="true"
+    [rowHeaders]="true">
+    <hot-column data="planDate" [readOnly]="true" title="Date"></hot-column>
+    <hot-column data="independentDemand" [readOnly]="false" title="Forecast"></hot-column>
+    <hot-column data="dependentDemand" [readOnly]="true" title="Distribution"></hot-column>
+    <hot-column data="totalDemand" [readOnly]="true" title="Total"></hot-column>
+</hot-table>
