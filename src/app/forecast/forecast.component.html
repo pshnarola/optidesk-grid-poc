@@ -4,16 +4,13 @@
 <ng-template #handsonContent let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Add Forecast Details</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
     </div>
     <div class="modal-body">
         <hot-table #hot class="hot" [settings]="hotSettings">
         </hot-table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="saveForecast()">Save</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close()">Save</button>
     </div>
 </ng-template>
 <br><br>
