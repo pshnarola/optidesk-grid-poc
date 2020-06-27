@@ -19,7 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HotTableModule,
+    HotTableModule.forRoot(),
     NgbModule,
     HttpClientModule
   ],
