@@ -140,24 +140,27 @@ export class ForecastComponent implements OnInit {
     }
 
     createGanttChart() {
+        const barHeight = 30;
+
         // set the dimensions and margins of the graph
         let margin = { top: 20, right: 20, bottom: 30, left: 40 },
-            width = 960 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+            width = 960 - margin.left - margin.right;
+        // height = 500 - margin.top - margin.bottom;
 
+        const height = Math.ceil((this.detailset.length + 0.1) * barHeight) + margin.top + margin.bottom;
         //remove existing svg and create new
         d3.select("body").select('svg').remove();
 
         //tooltip
         d3.select('body')
-        .append('div')
-        .attr('id', 'tooltip')
-        .attr('style', 'position: absolute; opacity: 0;')
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "1px")
-        .style("border-radius", "5px")
-        .style("padding", "10px")
+            .append('div')
+            .attr('id', 'tooltip')
+            .attr('style', 'position: absolute; opacity: 0;')
+            .style("background-color", "white")
+            .style("border", "solid")
+            .style("border-width", "1px")
+            .style("border-radius", "5px")
+            .style("padding", "5px 10px")
 
         // set the ranges
         let y = d3.scaleBand()
@@ -188,17 +191,17 @@ export class ForecastComponent implements OnInit {
             .attr("width", function (d) { return x(d.forecast); })
             .attr("y", function (d) { return y(d.bucket); })
             .attr("height", y.bandwidth())
-            .on('mouseover', function(d) {
-                d3.select('#tooltip').transition().duration(200).style('opacity', 1).text((d.bucket) + ":"  + (d.forecast))
+            .on('mouseover', function (d) {
+                d3.select('#tooltip').transition().duration(200).style('opacity', 1).text((d.bucket) + ":" + (d.forecast))
                 // d3.select('#tooltip').transition().duration(200).style('opacity', 1).text(d.forecast)
             })
-            .on('mouseout', function() {
+            .on('mouseout', function () {
                 d3.select('#tooltip').style('opacity', 0)
             })
-            .on('mousemove', function() {
+            .on('mousemove', function () {
                 d3.select('#tooltip')
-                .style('left', (d3.event.pageX+10) + 'px')
-                .style('top', (d3.event.pageY+10) + 'px')
+                    .style('left', (d3.event.pageX + 10) + 'px')
+                    .style('top', (d3.event.pageY + 10) + 'px')
             })
 
         // add the x Axis
