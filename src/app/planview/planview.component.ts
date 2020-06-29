@@ -48,7 +48,6 @@ export class PlanviewComponent implements OnInit {
     getDemandDetails() {
         this.shared.getDemandDetails().then(response => {
             this.detailset = response['demands'];
-            console.log('detailset', this.detailset)
             this.createGanttChart();
         }).catch(error => {
         });
