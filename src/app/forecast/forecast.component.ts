@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import Handsontable from 'handsontable';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as d3 from 'd3';
+import * as Chart from 'chart.js'
 
 @Component({
     selector: 'app-forecast',
@@ -72,6 +73,13 @@ export class ForecastComponent implements OnInit {
         }
     };
 
+    //chart js
+    canvas: any;
+    ctx: any;
+    column = [];
+    data = [];
+    myChart: any;
+
     constructor(
         private modalService: NgbModal
     ) { }
@@ -105,6 +113,8 @@ export class ForecastComponent implements OnInit {
                     let columnName = change[0][1];
                     this.detailset[this.gridColumnIndex[columnName]].forecast = newValue;
                     this.createGanttChart();
+                    this.myChart.destroy();
+                    this.generateChartsJsBar();
                 }
             }
         });
@@ -136,6 +146,7 @@ export class ForecastComponent implements OnInit {
         this.modalRef.result.then((result) => {
             this.hotForecastGrid.loadData(this.createForecastGridData());
             this.createGanttChart();
+            this.generateChartsJsBar();
         }, (reason) => {
         });
     }
@@ -229,5 +240,36 @@ export class ForecastComponent implements OnInit {
             .call(d3.axisBottom(x))
             .attr("transform", "translate(0," + height + ")")
 
+    }
+
+    generateChartsJsBar() {
+        this.column = [];
+        this.data = [];
+        this.detailset.forEach(element => {
+            this.column.push(element.bucket);
+            this.data.push(element.forecast);
+        });
+        this.canvas = document.getElementById('myChart');
+        this.ctx = this.canvas.getContext('2d');
+         this.myChart = new Chart(this.ctx, {
+            type: 'horizontalBar',
+            data: {
+                labels: this.column,
+                datasets: [{
+                    label: 'Forecast Data',
+                    data: this.data,
+                    backgroundColor: 'rgb(220,220,220)',
+                    hoverBackgroundColor: 'rgb(169,169,169)',	
+                    borderWidth: 1,
+                    barThickness: 40,
+                    barPercentage: 1.0,
+                    categoryPercentage: 1.0
+                }]
+            },
+            options: {
+                responsive: false,
+                display: true
+            }
+        });
     }
 }
