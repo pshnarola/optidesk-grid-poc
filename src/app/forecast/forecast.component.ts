@@ -148,7 +148,16 @@ export class ForecastComponent implements OnInit {
         //remove existing svg and create new
         d3.select("body").select('svg').remove();
 
-        const tooltip = d3.select("body").append("div").attr("class", "toolTip");
+        //tooltip
+        d3.select('body')
+        .append('div')
+        .attr('id', 'tooltip')
+        .attr('style', 'position: absolute; opacity: 0;')
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "1px")
+        .style("border-radius", "5px")
+        .style("padding", "10px")
 
         // set the ranges
         let y = d3.scaleBand()
@@ -169,7 +178,6 @@ export class ForecastComponent implements OnInit {
         // Scale the range of the data in the domains
         x.domain([0, d3.max(this.detailset, function (d) { return d.forecast; })])
         y.domain(this.detailset.map(function (d) { return d.bucket; }));
-        //y.domain([0, d3.max(data, function(d) { return d.sales; })]);
 
         // append the rectangles for the bar chart
         svg.selectAll(".bar")
@@ -180,6 +188,17 @@ export class ForecastComponent implements OnInit {
             .attr("width", function (d) { return x(d.forecast); })
             .attr("y", function (d) { return y(d.bucket); })
             .attr("height", y.bandwidth())
+            .on('mouseover', function(d) {
+                d3.select('#tooltip').transition().duration(200).style('opacity', 1).text(d.forecast)
+            })
+            .on('mouseout', function() {
+                d3.select('#tooltip').style('opacity', 0)
+            })
+            .on('mousemove', function() {
+                d3.select('#tooltip')
+                .style('left', (d3.event.pageX+10) + 'px')
+                .style('top', (d3.event.pageY+10) + 'px')
+            })
 
         // add the x Axis
         svg.append('g')
