@@ -70,7 +70,7 @@ export class PlanviewComponent implements OnInit {
         const barHeight = 30;
 
         // set the dimensions and margins of the graph
-        let margin = { top: 20, right: 50, bottom: 30, left: 50 },
+        let margin = { top: 20, right: 50, bottom: 30, left: 80 },
             width = 960 - margin.left - margin.right;
         // height = 500 - margin.top - margin.bottom;
 
@@ -133,11 +133,13 @@ export class PlanviewComponent implements OnInit {
             })
 
         // add the x Axis
+        var maxWidth = 0;
+
         svg.append('g')
             .attr('fill', 'white')
             .attr('text-anchor', 'end')
             .attr('font-family', 'sans-serif')
-            .attr('font-size', 12)
+            .attr('font-size', 11)
             .selectAll('text')
             .data(this.detailset)
             .enter().append('text')
@@ -148,13 +150,12 @@ export class PlanviewComponent implements OnInit {
             .text(d => (d.totalDemand));
 
         // add the y Axis
-        var maxw = 0;
         svg.append("g")
             .call(d3.axisLeft(y))
-            // .selectAll("text").each(function () {
-            //     if (this.getBBox().width > maxw) maxw = this.getBBox().width;
-            // })
-            // .attr("transform", "translate(" + maxw + ",0)");
+        // .selectAll("text").each(function () {
+        //     if (this.getBBox().width > maxw) maxw = this.getBBox().width;
+        // })
+        // .attr("transform", "translate(" + maxw + ",0)");
 
         svg.append("g")
             .call(d3.axisBottom(x))
