@@ -189,7 +189,8 @@ export class ForecastComponent implements OnInit {
             .attr("y", function (d) { return y(d.bucket); })
             .attr("height", y.bandwidth())
             .on('mouseover', function(d) {
-                d3.select('#tooltip').transition().duration(200).style('opacity', 1).text(d.forecast)
+                d3.select('#tooltip').transition().duration(200).style('opacity', 1).text((d.bucket) + ":"  + (d.forecast))
+                // d3.select('#tooltip').transition().duration(200).style('opacity', 1).text(d.forecast)
             })
             .on('mouseout', function() {
                 d3.select('#tooltip').style('opacity', 0)
