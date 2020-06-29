@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import Handsontable from 'handsontable';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import * as d3 from 'd3';
 
 @Component({
     selector: 'app-forecast',
@@ -8,7 +9,6 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./forecast.component.scss']
 })
 export class ForecastComponent implements OnInit {
-
     detailset = [
         {
             bucket: 'wk01',
@@ -70,6 +70,7 @@ export class ForecastComponent implements OnInit {
             return cellProperties;
         }
     };
+
     constructor(
         private modalService: NgbModal
     ) { }
@@ -102,6 +103,7 @@ export class ForecastComponent implements OnInit {
                     let newValue = Number(change[0][3]);
                     let columnName = change[0][1];
                     this.detailset[this.gridColumnIndex[columnName]].forecast = newValue;
+                    this.createGanttChart();
                 }
             }
         });
@@ -132,7 +134,75 @@ export class ForecastComponent implements OnInit {
         this.modalRef = this.modalService.open(handsonContent);
         this.modalRef.result.then((result) => {
             this.hotForecastGrid.loadData(this.createForecastGridData());
+            this.createGanttChart();
         }, (reason) => {
         });
+    }
+
+    createGanttChart() {
+        // set the dimensions and margins of the graph
+        let margin = { top: 20, right: 20, bottom: 30, left: 40 },
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+
+        //remove existing svg and create new
+        d3.select("body").select('svg').remove();
+
+        const tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+        // set the ranges
+        let y = d3.scaleBand()
+            .range([height, 0])
+            .padding(0.1);
+
+        let x = d3.scaleLinear()
+            .range([0, width]);
+
+        // moves the 'group' element to the top left margin
+        let svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        // Scale the range of the data in the domains
+        x.domain([0, d3.max(this.detailset, function (d) { return d.forecast; })])
+        y.domain(this.detailset.map(function (d) { return d.bucket; }));
+        //y.domain([0, d3.max(data, function(d) { return d.sales; })]);
+
+        // append the rectangles for the bar chart
+        svg.selectAll(".bar")
+            .data(this.detailset)
+            .enter().append("rect")
+            .attr("fill", "steelblue")
+            .attr("class", "bar")
+            .attr("width", function (d) { return x(d.forecast); })
+            .attr("y", function (d) { return y(d.bucket); })
+            .attr("height", y.bandwidth())
+
+        // add the x Axis
+        svg.append('g')
+            .attr('fill', 'white')
+            .attr('text-anchor', 'end')
+            .attr('font-family', 'sans-serif')
+            .attr('font-size', 12)
+            .selectAll('text')
+            .data(this.detailset)
+            .enter().append('text')
+            .attr('x', d => x(d.forecast))
+            .attr('y', (d, i) => y(d.bucket) + y.bandwidth() / 2)
+            .attr('dy', '0.35em')
+            .attr('dx', -4)
+            .text(d => (d.forecast));
+
+        // add the y Axis
+        svg.append("g")
+            .call(d3.axisLeft(y));
+
+        svg.append("g")
+            .call(d3.axisBottom(x))
+            .attr("transform", "translate(0," + height + ")")
+
     }
 }
