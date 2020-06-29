@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import Handsontable from 'handsontable';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as d3 from 'd3';
 
 @Component({
     selector: 'app-forecast',
+    encapsulation: ViewEncapsulation.None,
     templateUrl: './forecast.component.html',
     styleUrls: ['./forecast.component.scss']
 })
@@ -186,17 +187,18 @@ export class ForecastComponent implements OnInit {
         svg.selectAll(".bar")
             .data(this.detailset)
             .enter().append("rect")
-            .attr("fill", "steelblue")
+            // .attr("fill", "steelblue")
             .attr("class", "bar")
             .attr("width", function (d) { return x(d.forecast); })
             .attr("y", function (d) { return y(d.bucket); })
             .attr("height", y.bandwidth())
             .on('mouseover', function (d) {
                 d3.select('#tooltip').transition().duration(200).style('opacity', 1).text((d.bucket) + ":" + (d.forecast))
-                // d3.select('#tooltip').transition().duration(200).style('opacity', 1).text(d.forecast)
+                // d3.select(this).attr("fill", "grey");
             })
             .on('mouseout', function () {
                 d3.select('#tooltip').style('opacity', 0)
+                // d3.select(this).attr("fill", "steelblue");
             })
             .on('mousemove', function () {
                 d3.select('#tooltip')
