@@ -8,13 +8,15 @@ import { PlanviewAlternativeComponent } from './planview-alternative/planview-al
 import { HotTableModule } from '@handsontable/angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import { HotComponent } from './hot/hot.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ForecastComponent,
     PlanviewComponent,
-    PlanviewAlternativeComponent
+    PlanviewAlternativeComponent,
+    HotComponent
   ],
   imports: [
     BrowserModule,

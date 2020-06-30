@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import Handsontable from 'handsontable';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as d3 from 'd3';
-import * as Chart from 'chart.js'
+import * as Chart from 'chart.js';
 
 @Component({
     selector: 'app-forecast',
@@ -73,7 +73,7 @@ export class ForecastComponent implements OnInit {
         }
     };
 
-    //chart js
+    // chart js
     canvas: any;
     ctx: any;
     column = [];
@@ -86,6 +86,7 @@ export class ForecastComponent implements OnInit {
 
     ngOnInit() {
         this.generateForecastGrid();
+        this.generateChartsJsBar();
     }
 
     generateForecastGrid() {
@@ -95,11 +96,11 @@ export class ForecastComponent implements OnInit {
             data: this.gridDataSource,
             colWidths: 100,
             width: '100%',
-            height: 320,
             rowHeights: 23,
             rowHeaders: false,
             colHeaders: true,
             columns: this.gridColumns,
+            maxRows: 1,
             cells: (row, column, prop) => {
                 const cellProperties: any = {};
                 if (row === 0 && column === 0) {
@@ -109,12 +110,12 @@ export class ForecastComponent implements OnInit {
             },
             afterChange: (change, source) => {
                 if (change !== null) {
-                    let newValue = Number(change[0][3]);
-                    let columnName = change[0][1];
+                    const newValue = Number(change[0][3]);
+                    const columnName = change[0][1];
                     this.detailset[this.gridColumnIndex[columnName]].forecast = newValue;
                     this.createGanttChart();
-                    this.myChart.destroy();
-                    this.generateChartsJsBar();
+                    this.myChart.data.datasets[0].data[this.gridColumnIndex[columnName]] = newValue;
+                    this.myChart.update();
                 }
             }
         });
@@ -130,9 +131,10 @@ export class ForecastComponent implements OnInit {
             firstCol: 'Forecast'
         };
         this.detailset.forEach((element, index) => {
-            const json = {};
-            json['title'] = element.bucket;
-            json['data'] = element.bucket;
+            const json = {
+                title: element.bucket,
+                data: element.bucket
+            };
             this.gridColumns.push(json);
             this.gridColumnIndex[element.bucket] = index;
             rowObj[element.bucket] = element.forecast;
@@ -155,67 +157,61 @@ export class ForecastComponent implements OnInit {
         const barHeight = 30;
 
         // set the dimensions and margins of the graph
-        let margin = { top: 20, right: 20, bottom: 30, left: 40 },
-            width = 960 - margin.left - margin.right;
-        // height = 500 - margin.top - margin.bottom;
+        const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+        const width = 960 - margin.left - margin.right;
 
         const height = Math.ceil((this.detailset.length + 0.1) * barHeight) + margin.top + margin.bottom;
-        //remove existing svg and create new
-        d3.select("body").select('svg').remove();
+        d3.select('body').select('svg').remove();
 
-        //tooltip
         d3.select('body')
             .append('div')
             .attr('id', 'tooltip')
             .attr('style', 'position: absolute; opacity: 0;')
-            .style("background-color", "white")
-            .style("border", "solid")
-            .style("border-width", "1px")
-            .style("border-radius", "5px")
-            .style("padding", "5px 10px")
+            .style('background-color', 'white')
+            .style('border', 'solid')
+            .style('border-width', '1px')
+            .style('border-radius', '5px')
+            .style('padding', '5px 10px');
 
         // set the ranges
-        let y = d3.scaleBand()
+        const y = d3.scaleBand()
             .range([height, 0])
             .padding(0.1);
 
-        let x = d3.scaleLinear()
+        const x = d3.scaleLinear()
             .range([0, width]);
 
         // moves the 'group' element to the top left margin
-        let svg = d3.select("body").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform",
-                "translate(" + margin.left + "," + margin.top + ")");
+        const svg = d3.select('body').append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform',
+                'translate(' + margin.left + ',' + margin.top + ')');
 
         // Scale the range of the data in the domains
-        x.domain([0, d3.max(this.detailset, function (d) { return d.forecast; })])
-        y.domain(this.detailset.map(function (d) { return d.bucket; }));
+        x.domain([0, d3.max(this.detailset, d => d.forecast)]);
+        y.domain(this.detailset.map(d => d.bucket));
 
         // append the rectangles for the bar chart
-        svg.selectAll(".bar")
+        svg.selectAll('.bar')
             .data(this.detailset)
-            .enter().append("rect")
-            // .attr("fill", "steelblue")
-            .attr("class", "bar")
-            .attr("width", function (d) { return x(d.forecast); })
-            .attr("y", function (d) { return y(d.bucket); })
-            .attr("height", y.bandwidth())
-            .on('mouseover', function (d) {
-                d3.select('#tooltip').transition().duration(200).style('opacity', 1).text((d.bucket) + ":" + (d.forecast))
-                // d3.select(this).attr("fill", "grey");
+            .enter().append('rect')
+            .attr('class', 'bar')
+            .attr('width', d => x(d.forecast))
+            .attr('y', d => y(d.bucket))
+            .attr('height', y.bandwidth())
+            .on('mouseover', d => {
+                d3.select('#tooltip').transition().duration(200).style('opacity', 1).text((d.bucket) + ':' + (d.forecast));
             })
-            .on('mouseout', function () {
-                d3.select('#tooltip').style('opacity', 0)
-                // d3.select(this).attr("fill", "steelblue");
+            .on('mouseout', () => {
+                d3.select('#tooltip').style('opacity', 0);
             })
-            .on('mousemove', function () {
+            .on('mousemove', () => {
                 d3.select('#tooltip')
                     .style('left', (d3.event.pageX + 10) + 'px')
-                    .style('top', (d3.event.pageY + 10) + 'px')
-            })
+                    .style('top', (d3.event.pageY + 10) + 'px');
+            });
 
         // add the x Axis
         svg.append('g')
@@ -233,13 +229,12 @@ export class ForecastComponent implements OnInit {
             .text(d => (d.forecast));
 
         // add the y Axis
-        svg.append("g")
+        svg.append('g')
             .call(d3.axisLeft(y));
 
-        svg.append("g")
+        svg.append('g')
             .call(d3.axisBottom(x))
-            .attr("transform", "translate(0," + height + ")")
-
+            .attr('transform', 'translate(0,' + height + ')');
     }
 
     generateChartsJsBar() {
@@ -251,34 +246,84 @@ export class ForecastComponent implements OnInit {
         });
         this.canvas = document.getElementById('myChart');
         this.ctx = this.canvas.getContext('2d');
-         this.myChart = new Chart(this.ctx, {
+        this.myChart = new Chart(this.ctx, {
             type: 'horizontalBar',
             data: {
                 labels: this.column,
+                borderColor: '#000',
                 datasets: [{
-                    label: 'Forecast Data',
+                    label: 'Forecast',
                     data: this.data,
-                    backgroundColor: 'rgb(220,220,220)',
-                    hoverBackgroundColor: 'rgb(169,169,169)',	
-                    borderWidth: 1,
-                    barThickness: 40,
-                    barPercentage: 1.0,
-                    categoryPercentage: 1.0
+                    backgroundColor: '#6bbee4',
+                    hoverBackgroundColor: '#1698d4',
+                    borderColor: '#6bbee4',
+                    hoverBorderColor: '#1698d4',
+                    borderSkipped: false,
+                    borderWidth: 2,
+                    barThickness: 'flex',
+                    barPercentage: 1,
+                    categoryPercentage: 0.5
                 }]
             },
             options: {
-                responsive: false,
-                display: true
-            },
-            // stacked helps in starting y axis value from 0
-            scales: {
-                xAxes: [{
-                    stacked: true
-                }],
-                yAxes: [{
-                    stacked: true,
-                }]
-            },
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                display: true,
+                elements: {
+                    rectangle: {
+                        borderWidth: 2
+                    }
+                },
+                scales: {
+                    xAxes: [
+                        {
+                            position: 'top',
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Forecast',
+                                fontColor: '#333',
+                                fontSize: 14,
+                                fontStyle: 'bold'
+                            },
+                            gridLines: {
+                                offset: false,
+                                lineWidth: 0,
+                                zeroLineWidth: 2,
+                                zeroLineColor: '#333'
+                            },
+                            ticks: {
+                                fontColor: '#333',
+                                fontStyle: 'bold'
+                            },
+                            stacked: true
+                        }
+                    ],
+                    yAxes: [
+                        {
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Plan Bucket',
+                                fontColor: '#333',
+                                fontSize: 14,
+                                fontStyle: 'bold'
+                            },
+                            gridLines: {
+                                lineWidth: 0,
+                                zeroLineWidth: 2,
+                                zeroLineColor: '#333',
+                                offsetGridLines: true
+                            },
+                            ticks: {
+                                fontColor: '#333',
+                                fontStyle: 'bold'
+                            },
+                            stacked: true
+                        }
+                    ]
+                }
+            }
         });
     }
 }

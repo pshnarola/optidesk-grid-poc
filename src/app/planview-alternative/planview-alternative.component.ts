@@ -4,8 +4,7 @@ import { SharedService } from '../shared/services/shared.service';
 import { PLAN_ROWS } from './planview-config';
 import { HotTableRegisterer } from '@handsontable/angular';
 import * as d3 from 'd3';
-import * as Chart from 'chart.js'
-
+import * as Chart from 'chart.js';
 
 @Component({
     selector: 'app-planview-alternative',

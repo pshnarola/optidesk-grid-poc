@@ -1,6 +1,5 @@
-<h1 class="ml-3">Handson Table Implementation</h1>
-<br><br>
-<button class="btn btn-lg btn-outline-primary ml-5" (click)="openHandsonTable(handsonContent)">Upload</button>
+<h1>Handson Table Implementation</h1>
+<button class="btn btn-primary mb-3" (click)="openHandsonTable(handsonContent)">Upload</button>
 <ng-template #handsonContent let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Add Forecast Details</h4>
@@ -13,12 +12,14 @@
         <button type="button" class="btn btn-outline-dark" (click)="modal.close()">Save</button>
     </div>
 </ng-template>
-<br><br>
+<br>
 <div class="forecast-upload">
     <div id="example"></div>
 </div>
 <hr>
 <h1>Chart.js</h1>
-<canvas id="myChart" width="700" height="700"></canvas>
+<div class="chart-container" style="position: relative;">
+    <canvas id="myChart"></canvas>
+</div>
 <hr>
 <h1>D3.js</h1>

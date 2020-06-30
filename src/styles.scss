@@ -6,11 +6,11 @@ body {
 }
 
 h1 {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 hr {
-    margin: 20px 0;
+    margin: 15px 0;
     border: 1px solid #ccc;
 }
 
@@ -158,10 +158,6 @@ table thead td {
     font-weight: bold;
 }
 
-.forecast-upload {
-    margin-left: 47px;
-}
-
 .wtHolder {
     position: relative !important;
     height: auto !important;
@@ -170,8 +166,8 @@ table thead td {
 
 .bar {
     fill: steelblue;
-  }
-  
+}
+
 .bar:hover {
     fill: brown;
 }

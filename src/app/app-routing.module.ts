@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ForecastComponent } from './forecast/forecast.component';
 import { PlanviewComponent } from './planview/planview.component';
 import { PlanviewAlternativeComponent } from './planview-alternative/planview-alternative.component';
+import { HotComponent } from './hot/hot.component';
 
 
 const routes: Routes = [
@@ -19,8 +20,12 @@ const routes: Routes = [
     component: PlanviewAlternativeComponent
   },
   {
+    path: 'handsontable',
+    component: HotComponent
+  },
+  {
     path: '',
-    redirectTo: 'forecast',
+    redirectTo: 'handsontable',
     pathMatch: 'full'
   }
 ];
