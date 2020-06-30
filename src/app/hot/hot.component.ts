@@ -26,6 +26,7 @@ export class HotComponent implements OnInit {
         autoRowSize: true,
         selectionMode: 'single',
         allowInvalid: false,
+        maxRows: this.planRowsConfig.length,
         cells: (row, column, prop) => {
             const cellProperties: any = {};
             const rowConfig = PLAN_ROWS[row];
@@ -37,15 +38,24 @@ export class HotComponent implements OnInit {
             }
             return cellProperties;
         },
+        beforeKeyDown: (event) => {
+            const invalidKeys = ['-', '+']
+            if (invalidKeys.indexOf(event.key) > -1) {
+                event.preventDefault();
+            }
+        },
         afterChange: (change, source) => {
             if (change && source.toString() !== 'api') {
                 const currentColumn = change[0][1];
                 const newValue = change[0][3];
                 const oldValue = change[0][2];
                 if (newValue !== oldValue) {
-                    this.updatePivotData(newValue, currentColumn)
+                    this.updatePivotData(newValue, currentColumn);
                 }
             }
+        },
+        afterValidate: (isValid, value, row, prop, source) => {
+            return (isValid && value >= 0);
         }
     };
 
@@ -80,7 +90,8 @@ export class HotComponent implements OnInit {
             this.hotColumns.push({
                 data: detail[this.columnIdentifier],
                 title: detail[this.columnIdentifier],
-                type: 'numeric'
+                type: 'numeric',
+                allowEmpty: false
             });
             this.columnIndexAPI[detail[this.columnIdentifier]] = index;
         });
