@@ -269,7 +269,16 @@ export class ForecastComponent implements OnInit {
             options: {
                 responsive: false,
                 display: true
-            }
+            },
+            // stacked helps in starting y axis value from 0
+            scales: {
+                xAxes: [{
+                    stacked: true
+                }],
+                yAxes: [{
+                    stacked: true,
+                }]
+            },
         });
     }
 }

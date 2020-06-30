@@ -198,7 +198,15 @@ export class PlanviewComponent implements OnInit {
             },
             options: {
                 responsive: false,
-                display: true
+                display: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
+                    yAxes: [{
+                        stacked: true,
+                    }]
+                },
             }
         });
     }

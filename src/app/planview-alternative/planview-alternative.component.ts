@@ -250,22 +250,20 @@ export class PlanviewAlternativeComponent implements OnInit {
                     hoverBackgroundColor: 'rgb(169,169,169)',
                     borderWidth: 1,
                     barThickness: 40,
-                    minBarLength: 20,
-                    // barPercentage: 1.0,
-                    // categoryPercentage: 1.0
+                    minBarLength: 20
                 }]
             },
             options: {
                 responsive: false,
                 display: true,
                 scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
                     yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            min: 0
-                        }
+                        stacked: true,
                     }]
-                }
+                },
             }
         });
     }
