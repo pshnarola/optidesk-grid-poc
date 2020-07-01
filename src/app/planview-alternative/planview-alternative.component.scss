@@ -1,0 +1,15 @@
+.line {
+    fill: none;
+    stroke-width: 3px;
+}
+
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.hover-line {
+    stroke: #B74779;
+    stroke-width: 2px;
+    stroke-dasharray: 3, 3;
+}
