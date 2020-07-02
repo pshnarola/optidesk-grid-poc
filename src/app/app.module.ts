@@ -9,6 +9,7 @@ import { HotTableModule } from '@handsontable/angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { HotComponent } from './hot/hot.component';
+import { CustomComponent } from './custom/custom.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { HotComponent } from './hot/hot.component';
     ForecastComponent,
     PlanviewComponent,
     PlanviewAlternativeComponent,
-    HotComponent
+    HotComponent,
+    CustomComponent
   ],
   imports: [
     BrowserModule,

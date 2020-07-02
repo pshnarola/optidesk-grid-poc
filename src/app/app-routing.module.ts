@@ -4,6 +4,7 @@ import { ForecastComponent } from './forecast/forecast.component';
 import { PlanviewComponent } from './planview/planview.component';
 import { PlanviewAlternativeComponent } from './planview-alternative/planview-alternative.component';
 import { HotComponent } from './hot/hot.component';
+import { CustomComponent } from './custom/custom.component';
 
 
 const routes: Routes = [
@@ -24,8 +25,12 @@ const routes: Routes = [
     component: HotComponent
   },
   {
+    path: 'custom',
+    component: CustomComponent
+  },
+  {
     path: '',
-    redirectTo: 'handsontable',
+    redirectTo: 'custom',
     pathMatch: 'full'
   }
 ];
