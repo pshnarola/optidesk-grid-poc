@@ -37,6 +37,9 @@ export const PLAN_COLUMNS = [
     },
     {
         planDate: '05-07-2020'
+    },
+    {
+        planDate: '06-07-2020'
     }
 ];
 
@@ -103,7 +106,6 @@ export const planData = [
         keyFig: 'totDemand',
         quantity: 154
     },
-    ,
     {
         planDate: '05-07-2020',
         keyFig: 'indDemand',
@@ -118,5 +120,20 @@ export const planData = [
         planDate: '05-07-2020',
         keyFig: 'totDemand',
         quantity: 154
+    },
+    {
+        planDate: '06-07-2020',
+        keyFig: 'indDemand',
+        quantity: 300
+    },
+    {
+        planDate: '06-07-2020',
+        keyFig: 'depDemand',
+        quantity: 210
+    },
+    {
+        planDate: '06-07-2020',
+        keyFig: 'totDemand',
+        quantity: 510
     }
 ];
