@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HotComponent } from './hot/hot.component';
 import { CustomComponent } from './custom/custom.component';
 import { FormsModule } from '@angular/forms';
+import { CustomUiComponent } from './custom-ui/custom-ui.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FormsModule } from '@angular/forms';
     PlanviewComponent,
     PlanviewAlternativeComponent,
     HotComponent,
-    CustomComponent
+    CustomComponent,
+    CustomUiComponent
   ],
   imports: [
     BrowserModule,

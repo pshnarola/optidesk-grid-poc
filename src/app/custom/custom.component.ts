@@ -41,6 +41,7 @@ export class CustomComponent implements OnInit {
     }
 
     generateLineChart() {
+        console.log('chart data', this.chartData)
         const data = this.chartData;
         const trendsText = {
             depDemand: 'Dependent Demand',
@@ -56,7 +57,7 @@ export class CustomComponent implements OnInit {
         const svg = d3.select('svg');
         const width = +svg.attr('width') - margin.left - margin.right;
         const height = +svg.attr('height') - margin.top - margin.bottom;
-
+        console.log('width', width);
         const g = svg.append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
@@ -76,6 +77,7 @@ export class CustomComponent implements OnInit {
         }));
 
         const trends = z.domain().map(name => {
+            console.log('name', name);
             return {
                 name,
                 values: this.chartData.map(d => {
@@ -94,24 +96,26 @@ export class CustomComponent implements OnInit {
         })]);
 
         // Draw the legend
-        var legend = g.selectAll('g')
+        const legend = g.selectAll('g')
             .data(trends)
             .enter()
             .append('g')
             .attr('class', 'legend');
 
         legend.append('rect')
-            .attr('x', width - 20)
-            .attr('y', function (d, i) { return height / 2 - (i + 1) * 20; })
+            .attr('x', (d, i) => (i) * 220)
+            // .attr('y', (d, i) => height / 2 - (i + 1) * 20)
+            .attr('y', (d, i) => height + 30)
             .attr('width', 10)
             .attr('height', 10)
-            .style('fill', function (d) { return z(d.name); });
+            .style('fill', d => z(d.name));
 
         legend.append('text')
-            .attr('x', width - 8)
-            .attr('width', 20)
-            .attr('y', function (d, i) { return height / 2 - (i + 1) * 20 + 10; })
-            .text(function (d) { return trendsText[d.name]; });
+            .attr('x', (d, i) => (i) * 220 + 20)
+            // .attr('y', (d, i) => height / 2 - (i + 1) * 20 + 10)
+            .attr('y', (d, i) => height + 30 + 10)
+            .text((d) => trendsText[d.name]);
+
 
         // Draw the line
         const trend = g.selectAll('.trend')
@@ -200,12 +204,12 @@ export class CustomComponent implements OnInit {
     onBlurMethod(rowIndex, columnIndex, column) {
         const planDate = column['planDate']
         const rowLabel = this.planRowsConfig[rowIndex];
-        if(this.pshDataSet.hasOwnProperty(column['planDate'])) {
+        if (this.pshDataSet.hasOwnProperty(column['planDate'])) {
             this.pshDataSet[planDate][rowLabel.keyFig] = Number(this.pshDataSet[planDate][rowLabel.keyFig])
             this.pshDataSet[planDate]['totDemand'] = this.pshDataSet[planDate][rowLabel.keyFig] + this.pshDataSet[planDate]['depDemand']
         }
         this.tableDetails.forEach(element => {
-            if(element.planDate === planDate && element.keyFig === rowLabel.keyFig) {
+            if (element.planDate === planDate && element.keyFig === rowLabel.keyFig) {
             }
         });
         this.generateLineChart();

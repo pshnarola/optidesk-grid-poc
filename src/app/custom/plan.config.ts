@@ -47,7 +47,7 @@ export const planData = [
     {
         planDate: '01-07-2020',
         keyFig: 'indDemand',
-        quantity: 100
+        quantity: 150
     },
     {
         planDate: '01-07-2020',
@@ -62,7 +62,7 @@ export const planData = [
     {
         planDate: '02-07-2020',
         keyFig: 'indDemand',
-        quantity: 102
+        quantity: 10
     },
     {
         planDate: '02-07-2020',
@@ -78,7 +78,7 @@ export const planData = [
     {
         planDate: '03-07-2020',
         keyFig: 'indDemand',
-        quantity: 300
+        quantity: 50
     },
     {
         planDate: '03-07-2020',
@@ -94,7 +94,7 @@ export const planData = [
     {
         planDate: '04-07-2020',
         keyFig: 'indDemand',
-        quantity: 102
+        quantity: 60
     },
     {
         planDate: '04-07-2020',

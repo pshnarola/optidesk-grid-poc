@@ -5,6 +5,7 @@ import { PlanviewComponent } from './planview/planview.component';
 import { PlanviewAlternativeComponent } from './planview-alternative/planview-alternative.component';
 import { HotComponent } from './hot/hot.component';
 import { CustomComponent } from './custom/custom.component';
+import { CustomUiComponent } from './custom-ui/custom-ui.component';
 
 
 const routes: Routes = [
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'custom',
     component: CustomComponent
+  },
+  {
+    path: 'custom-ui',
+    component: CustomUiComponent
   },
   {
     path: '',
