@@ -17,4 +17,19 @@ export class SharedService {
     const url = environment.DOMAIN.URL + 'demands';
     return this.http.put<any>(url, body ).toPromise();
   }
+
+  getKeyFigures() {
+    const url = environment.DOMAIN.URL + 'key-figures';
+    return this.http.get<any>(url).toPromise();
+  }
+
+  getPlanDates() {
+    const url = environment.DOMAIN.URL + 'plan-dates';
+    return this.http.get<any>(url).toPromise();
+  }
+
+  getPlanView() {
+    const url = environment.DOMAIN.URL + 'plan-views';
+    return this.http.get<any>(url).toPromise();
+  }
 }
