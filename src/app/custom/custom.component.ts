@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PLAN_ROWS, PLAN_COLUMNS, planData } from './plan.config';
+import { PLAN_ROWS } from './plan.config';
 import * as d3 from 'd3';
+import { SharedService } from '../shared/services/shared.service';
 
 @Component({
     selector: 'app-custom',
@@ -8,28 +9,34 @@ import * as d3 from 'd3';
     styleUrls: ['./custom.component.scss']
 })
 export class CustomComponent implements OnInit {
-    tableDetails: any = planData;
     planRowsConfig = PLAN_ROWS;
-    columnConfig = JSON.parse(JSON.stringify(PLAN_COLUMNS));
+    columnConfig: any;
+    tableDetails: any;
     dataset = [];
-
     pshDataSet = {};
     chartData = [];
-    constructor() { }
+    constructor(
+        private shared: SharedService
+    ) { }
 
     ngOnInit(): void {
-        this.generateRowData();
-        this.generateLineChart();
+        this.fetchData();
+    }
+
+    async fetchData() {
+        return await Promise.all([
+            this.shared.getPlanDates(),
+            this.shared.getPlanView(),
+            this.shared.getKeyFigures()
+        ]).then(res => {
+            this.columnConfig = res[0];
+            this.columnConfig.unshift({ planDate: 'Key Figure' });
+            this.tableDetails = res[1];
+            this.generateRowData();
+        })
     }
 
     generateRowData() {
-        const result = this.tableDetails.reduce(function (r, a) {
-            r[a.planDate] = r[a.planDate] || [];
-            r[a.planDate].push(a);
-            return r;
-        }, Object.create(null));
-
-        this.dataset = result;
         this.tableDetails.forEach(element => {
             if (!this.pshDataSet.hasOwnProperty(element.planDate)) {
                 this.pshDataSet[element.planDate] = {};
@@ -38,10 +45,10 @@ export class CustomComponent implements OnInit {
             this.pshDataSet[element.planDate]['timescale'] = element.planDate;
             this.pshDataSet[element.planDate][element.keyFig] = element.quantity;
         });
+        this.generateLineChart();
     }
 
     generateLineChart() {
-        console.log('chart data', this.chartData)
         const data = this.chartData;
         const trendsText = {
             depDemand: 'Dependent Demand',
@@ -53,11 +60,10 @@ export class CustomComponent implements OnInit {
         d3.selectAll("text").remove();
 
         // set the dimensions and margins of the graph
-        const margin = { top: 20, right: 80, bottom: 50, left: 50 };
+        const margin = { top: 20, right: 80, bottom: 150, left: 50 };
         const svg = d3.select('svg');
         const width = +svg.attr('width') - margin.left - margin.right;
         const height = +svg.attr('height') - margin.top - margin.bottom;
-        console.log('width', width);
         const g = svg.append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
@@ -77,7 +83,6 @@ export class CustomComponent implements OnInit {
         }));
 
         const trends = z.domain().map(name => {
-            console.log('name', name);
             return {
                 name,
                 values: this.chartData.map(d => {
@@ -104,16 +109,14 @@ export class CustomComponent implements OnInit {
 
         legend.append('rect')
             .attr('x', (d, i) => (i) * 220)
-            // .attr('y', (d, i) => height / 2 - (i + 1) * 20)
-            .attr('y', (d, i) => height + 30)
+            .attr('y', (d, i) => height + 70)
             .attr('width', 10)
             .attr('height', 10)
             .style('fill', d => z(d.name));
 
         legend.append('text')
             .attr('x', (d, i) => (i) * 220 + 20)
-            // .attr('y', (d, i) => height / 2 - (i + 1) * 20 + 10)
-            .attr('y', (d, i) => height + 30 + 10)
+            .attr('y', (d, i) => height + 70 + 10)
             .text((d) => trendsText[d.name]);
 
 
@@ -128,6 +131,7 @@ export class CustomComponent implements OnInit {
             .attr('class', 'line')
             .attr('d', d => line(d.values))
             .style('stroke', d => z(d.name));
+
 
         // Draw the empty value for every point
         const points = g.selectAll('.points')
@@ -155,7 +159,13 @@ export class CustomComponent implements OnInit {
         g.append('g')
             .attr('class', 'axis axis-x')
             .attr('transform', 'translate(0, ' + height + ')')
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("y", 10)
+            .attr("x", -60)
+            .attr("dy", ".35em")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "start");
 
         g.append('g')
             .attr('class', 'axis axis-y')
@@ -204,19 +214,23 @@ export class CustomComponent implements OnInit {
     onBlurMethod(rowIndex, columnIndex, column) {
         const planDate = column['planDate']
         const rowLabel = this.planRowsConfig[rowIndex];
-        if (this.pshDataSet.hasOwnProperty(column['planDate'])) {
-            this.pshDataSet[planDate][rowLabel.keyFig] = Number(this.pshDataSet[planDate][rowLabel.keyFig])
-            this.pshDataSet[planDate]['totDemand'] = this.pshDataSet[planDate][rowLabel.keyFig] + this.pshDataSet[planDate]['depDemand']
+        const json = {
+            'planDate': planDate,
+            'keyFig': rowLabel.keyFig,
+            'quantity': Number(this.pshDataSet[planDate][rowLabel.keyFig])
         }
-        this.tableDetails.forEach(element => {
-            if (element.planDate === planDate && element.keyFig === rowLabel.keyFig) {
-            }
+        this.shared.updatePlanData(json).then(response => {
+            response.forEach(response => {
+                this.tableDetails.forEach(details => {
+                    if (response.planDate == details.planDate && response.keyFig == details.keyFig) {
+                        details['quantity'] = response.quantity;
+                    }
+                });
+            });
+            this.generateRowData();
+        }).catch(error => {
         });
         this.generateLineChart();
-    }
-
-    updatePlanview() {
-
     }
 
 }

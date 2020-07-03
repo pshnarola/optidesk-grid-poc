@@ -189,3 +189,22 @@ table thead td {
     stroke-width: 2px;
     stroke-dasharray: 3, 3;
 }
+
+.zui-wrapper {
+    position: relative;
+}
+
+.zui-scroller {
+    margin-left: 141px;
+    overflow-x: scroll;
+    overflow-y: visible;
+    padding-bottom: 5px;
+    width: calc(100% - 141px);
+}
+
+.zui-table .zui-sticky-col {
+    left: 0;
+    position: absolute;
+    top: auto;
+    width: 143px;
+}

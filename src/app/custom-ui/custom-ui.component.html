@@ -1,1 +1,42 @@
-<p>custom-ui works!</p>
+<h1>Custom Planview</h1>
+<button class="btn btn-primary mb-3 mt-3">Load Data</button>
+<div class="zui-wrapper">
+    <div class="zui-scroller">
+        <table class="excel zui-table">
+            <thead>
+                <tr>
+                    <th *ngFor="let column of columnConfig; let columnIndex = index"
+                        [ngClass]="{'text-left zui-sticky-col': columnIndex === 0}">
+                        {{column.planDate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of planRowsConfig; let rowIndex = index;">
+                    <td *ngFor="let column of columnConfig;let columnIndex= index"
+                        [ngClass]="{'zui-sticky-col': columnIndex === 0}">
+                        <ng-container *ngIf="columnIndex==0;else elseBlock" class="">
+                            <p>
+                                {{row.label}}
+                            </p>
+                        </ng-container>
+                        <ng-template #elseBlock>
+                            <ng-container>
+                                <p *ngIf="!row.editable">
+                                    {{ pshDataSet[column.planDate] ? pshDataSet[column.planDate][row.keyFig] : '' }}
+                                </p>
+                                <input *ngIf="row.editable" type="text"
+                                    [value]="pshDataSet[column.planDate][row.keyFig]"
+                                    [(ngModel)]="pshDataSet[column.planDate][row.keyFig]"
+                                    (blur)="onBlurMethod( rowIndex, columnIndex, column)">
+                            </ng-container>
+                        </ng-template>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<button class="btn btn-primary mb-3 mt-3" (click)="updatePlanview()">Save</button>
+<hr>
+<svg width="1200" height="550"></svg>
