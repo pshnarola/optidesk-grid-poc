@@ -1,5 +1,5 @@
 <h1>Custom Planview</h1>
-<button class="btn btn-primary mb-3 mt-3">Load Data</button>
+<button class="btn btn-primary mb-3 mt-3" (click)="loadPlanViewData()">Load Data</button>
 <div class="zui-wrapper">
     <div class="zui-scroller">
         <table class="excel zui-table">
@@ -26,8 +26,10 @@
                                     {{ pshDataSet[column.planDate] ? pshDataSet[column.planDate][row.keyFig] : '' }}
                                 </p>
                                 <input *ngIf="row.editable" type="text"
-                                    [value]="pshDataSet[column.planDate][row.keyFig]"
-                                    [(ngModel)]="pshDataSet[column.planDate][row.keyFig]"
+                                [(ngModel)]="isEmpty(pshDataSet)
+                                ? null : pshDataSet[column.planDate][row.keyFig]"
+                                 [value]="isEmpty(pshDataSet)
+                                 ? null : pshDataSet[column.planDate][row.keyFig]"
                                     (blur)="onBlurMethod( rowIndex, columnIndex, column)">
                             </ng-container>
                         </ng-template>

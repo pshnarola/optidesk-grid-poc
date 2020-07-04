@@ -28,13 +28,29 @@ export class CustomUiComponent implements OnInit {
   async fetchData() {
     return await Promise.all([
       this.shared.getPlanDates(),
-      this.shared.getPlanView()
+      this.shared.getKeyFigures()
     ]).then(res => {
       this.columnConfig = res[0];
       this.columnConfig.unshift({ planDate: 'Key Figure' });
-      this.tableDetails = res[1];
-      this.generateRowData();
     })
+  }
+
+  isEmpty(obj) {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop))
+        return false;
+    }
+
+    return true;
+    // return Object.keys(obj).length === 0;
+  }
+
+  loadPlanViewData() {
+    this.shared.getPlanView().then(response => {
+      this.tableDetails = response;
+      this.generateRowData();
+    }).catch(error => {
+    });
   }
 
   generateRowData() {
