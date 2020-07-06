@@ -15,21 +15,26 @@
             <tbody>
                 <tr *ngFor="let row of planRowsConfig; let rowIndex = index;">
                     <td *ngFor="let column of columnConfig;let columnIndex= index" [ngClass]="{'zui-sticky-col': columnIndex === 0}">
-                        <ng-container *ngIf="columnIndex==0;else elseBlock" class="">
+                        <ng-container *ngIf="columnIndex==0;else elseBlock">
                             <p>
                                 {{row.label}}
                             </p>
                         </ng-container>
                         <ng-template #elseBlock>
-                            <ng-container>
+                            <ng-container *ngIf="!loadData; else loadplanData">
                                 <p *ngIf="!row.editable">
                                     {{ pshDataSet[column.planDate] ? pshDataSet[column.planDate][row.keyFig] : '' }}
                                 </p>
-                                <input *ngIf="row.editable" type="text"
-                                [(ngModel)]="isEmpty(pshDataSet)
-                                ? null : pshDataSet[column.planDate][row.keyFig]"
-                                 [value]="isEmpty(pshDataSet)
-                                 ? null : pshDataSet[column.planDate][row.keyFig]"
+                            </ng-container>
+                        </ng-template>
+                        <ng-template #loadplanData>
+                            <ng-container >
+                                <p *ngIf="!row.editable">
+                                    {{ pshDataSet[column.planDate] ? pshDataSet[column.planDate][row.keyFig] : '' }}
+                                </p>
+                                   <input *ngIf="row.editable" type="text"
+                                [(ngModel)]="pshDataSet[column.planDate][row.keyFig]"
+                                 [value]="pshDataSet[column.planDate][row.keyFig]"
                                     (blur)="onBlurMethod( rowIndex, columnIndex, column)">
                             </ng-container>
                         </ng-template>

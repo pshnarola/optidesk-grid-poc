@@ -16,6 +16,7 @@ export class CustomUiComponent implements OnInit {
   chartData = [];
   planDate: any;
   rowLabel: any;
+  loadData = false;
 
   constructor(
     private shared: SharedService
@@ -34,20 +35,10 @@ export class CustomUiComponent implements OnInit {
     });
   }
 
-  isEmpty(obj) {
-    for (const prop in obj) {
-      if (obj.hasOwnProperty(prop)) {
-        return false;
-      }
-    }
-
-    return true;
-    // return Object.keys(obj).length === 0;
-  }
-
   loadPlanViewData() {
     this.shared.getPlanView().then(response => {
       this.tableDetails = response;
+      this.loadData = true;
       this.generateRowData();
     }).catch(error => {
     });

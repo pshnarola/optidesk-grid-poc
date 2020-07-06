@@ -15,6 +15,7 @@ export class CustomComponent implements OnInit {
     dataset = [];
     pshDataSet = {};
     chartData = [];
+    loadData = false;
     constructor(
         private shared: SharedService
     ) { }
@@ -32,18 +33,10 @@ export class CustomComponent implements OnInit {
         });
     }
 
-     isEmpty(obj) {
-        for (const prop in obj) {
-            if (obj.hasOwnProperty(prop)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     loadPlanViewData() {
         this.shared.getPlanView().then(response => {
             this.tableDetails = response;
+            this.loadData = true;
             this.generateRowData();
         }).catch(error => {
         });
@@ -233,6 +226,7 @@ export class CustomComponent implements OnInit {
             keyFig: rowLabel.keyFig,
             quantity: Number(this.pshDataSet[planDate][rowLabel.keyFig])
         };
+        console.log('json', json)
         this.shared.updatePlanData(json).then(res => {
             res.forEach(response => {
                 this.tableDetails.forEach(details => {
