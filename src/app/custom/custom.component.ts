@@ -25,18 +25,18 @@ export class CustomComponent implements OnInit {
 
     async fetchData() {
         return await Promise.all([
-            this.shared.getPlanDates(),
-            this.shared.getKeyFigures()
+            this.shared.getPlanDates()
         ]).then(res => {
             this.columnConfig = res[0];
             this.columnConfig.unshift({ planDate: 'Key Figure' });
-        })
+        });
     }
 
      isEmpty(obj) {
-        for(var prop in obj) {
-            if(obj.hasOwnProperty(prop))
+        for (const prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
                 return false;
+            }
         }
         return true;
     }
@@ -55,7 +55,7 @@ export class CustomComponent implements OnInit {
                 this.pshDataSet[element.planDate] = {};
                 this.chartData.push(this.pshDataSet[element.planDate]);
             }
-            this.pshDataSet[element.planDate]['timescale'] = element.planDate;
+            this.pshDataSet[element.planDate].timescale = element.planDate;
             this.pshDataSet[element.planDate][element.keyFig] = element.quantity;
         });
         this.generateLineChart();
@@ -68,9 +68,9 @@ export class CustomComponent implements OnInit {
             indDemand: 'Independent Demand',
             totDemand: 'Total Demand'
         };
-        d3.selectAll("path.line").remove();
-        d3.selectAll("circle").remove();
-        d3.selectAll("text").remove();
+        d3.selectAll('path.line').remove();
+        d3.selectAll('circle').remove();
+        d3.selectAll('text').remove();
 
         // set the dimensions and margins of the graph
         const margin = { top: 20, right: 80, bottom: 150, left: 50 };
@@ -173,12 +173,12 @@ export class CustomComponent implements OnInit {
             .attr('class', 'axis axis-x')
             .attr('transform', 'translate(0, ' + height + ')')
             .call(d3.axisBottom(x))
-            .selectAll("text")
-            .attr("y", 10)
-            .attr("x", -60)
-            .attr("dy", ".35em")
-            .attr("transform", "rotate(-45)")
-            .style("text-anchor", "start");
+            .selectAll('text')
+            .attr('y', 10)
+            .attr('x', -60)
+            .attr('dy', '.35em')
+            .attr('transform', 'rotate(-45)')
+            .style('text-anchor', 'start');
 
         g.append('g')
             .attr('class', 'axis axis-y')
@@ -225,18 +225,19 @@ export class CustomComponent implements OnInit {
     }
 
     onBlurMethod(rowIndex, columnIndex, column) {
-        const planDate = column['planDate']
+        const planDate = column.planDate;
         const rowLabel = this.planRowsConfig[rowIndex];
         const json = {
-            'planDate': planDate,
-            'keyFig': rowLabel.keyFig,
-            'quantity': Number(this.pshDataSet[planDate][rowLabel.keyFig])
-        }
-        this.shared.updatePlanData(json).then(response => {
-            response.forEach(response => {
+            // tslint:disable-next-line:object-literal-shorthand
+            planDate: planDate,
+            keyFig: rowLabel.keyFig,
+            quantity: Number(this.pshDataSet[planDate][rowLabel.keyFig])
+        };
+        this.shared.updatePlanData(json).then(res => {
+            res.forEach(response => {
                 this.tableDetails.forEach(details => {
-                    if (response.planDate == details.planDate && response.keyFig == details.keyFig) {
-                        details['quantity'] = response.quantity;
+                    if (response.planDate === details.planDate && response.keyFig === details.keyFig) {
+                        details.quantity = response.quantity;
                     }
                 });
             });

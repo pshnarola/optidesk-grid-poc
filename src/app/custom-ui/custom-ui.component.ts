@@ -27,18 +27,18 @@ export class CustomUiComponent implements OnInit {
 
   async fetchData() {
     return await Promise.all([
-      this.shared.getPlanDates(),
-      this.shared.getKeyFigures()
+      this.shared.getPlanDates()
     ]).then(res => {
       this.columnConfig = res[0];
       this.columnConfig.unshift({ planDate: 'Key Figure' });
-    })
+    });
   }
 
   isEmpty(obj) {
-    for (var prop in obj) {
-      if (obj.hasOwnProperty(prop))
+    for (const prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
         return false;
+      }
     }
 
     return true;
@@ -59,7 +59,7 @@ export class CustomUiComponent implements OnInit {
         this.pshDataSet[element.planDate] = {};
         this.chartData.push(this.pshDataSet[element.planDate]);
       }
-      this.pshDataSet[element.planDate]['timescale'] = element.planDate;
+      this.pshDataSet[element.planDate].timescale = element.planDate;
       this.pshDataSet[element.planDate][element.keyFig] = element.quantity;
     });
     this.generateLineChart();
@@ -72,9 +72,9 @@ export class CustomUiComponent implements OnInit {
       indDemand: 'Independent Demand',
       totDemand: 'Total Demand'
     };
-    d3.selectAll("path.line").remove();
-    d3.selectAll("circle").remove();
-    d3.selectAll("text").remove();
+    d3.selectAll('path.line').remove();
+    d3.selectAll('circle').remove();
+    d3.selectAll('text').remove();
 
     // set the dimensions and margins of the graph
     const margin = { top: 20, right: 80, bottom: 150, left: 50 };
@@ -177,12 +177,12 @@ export class CustomUiComponent implements OnInit {
       .attr('class', 'axis axis-x')
       .attr('transform', 'translate(0, ' + height + ')')
       .call(d3.axisBottom(x))
-      .selectAll("text")
-      .attr("y", 10)
-      .attr("x", -60)
-      .attr("dy", ".35em")
-      .attr("transform", "rotate(-45)")
-      .style("text-anchor", "start");
+      .selectAll('text')
+      .attr('y', 10)
+      .attr('x', -60)
+      .attr('dy', '.35em')
+      .attr('transform', 'rotate(-45)')
+      .style('text-anchor', 'start');
 
     g.append('g')
       .attr('class', 'axis axis-y')
@@ -229,27 +229,28 @@ export class CustomUiComponent implements OnInit {
   }
 
   onBlurMethod(rowIndex, columnIndex, column) {
-    this.planDate = column['planDate']
+    this.planDate = column.planDate;
     this.rowLabel = this.planRowsConfig[rowIndex];
-    if (this.pshDataSet.hasOwnProperty(column['planDate'])) {
-      this.pshDataSet[this.planDate][this.rowLabel.keyFig] = Number(this.pshDataSet[this.planDate][this.rowLabel.keyFig])
-      this.pshDataSet[this.planDate]['totDemand'] = this.pshDataSet[this.planDate][this.rowLabel.keyFig] + this.pshDataSet[this.planDate]['depDemand']
+    if (this.pshDataSet.hasOwnProperty(column.planDate)) {
+      this.pshDataSet[this.planDate][this.rowLabel.keyFig] = Number(this.pshDataSet[this.planDate][this.rowLabel.keyFig]);
+      // tslint:disable-next-line:max-line-length
+      this.pshDataSet[this.planDate].totDemand = this.pshDataSet[this.planDate][this.rowLabel.keyFig] + this.pshDataSet[this.planDate].depDemand;
     }
     this.generateLineChart();
   }
 
   updatePlanview() {
     const json = {
-      'planDate': this.planDate,
-      'keyFig': this.rowLabel.keyFig,
-      'quantity': Number(this.pshDataSet[this.planDate][this.rowLabel.keyFig])
-    }
+      planDate: this.planDate,
+      keyFig: this.rowLabel.keyFig,
+      quantity: Number(this.pshDataSet[this.planDate][this.rowLabel.keyFig])
+    };
 
-    this.shared.updatePlanData(json).then(response => {
-      response.forEach(response => {
+    this.shared.updatePlanData(json).then(res => {
+      res.forEach(response => {
         this.tableDetails.forEach(details => {
-          if (response.planDate == details.planDate && response.keyFig == details.keyFig) {
-            details['quantity'] = response.quantity;
+          if (response.planDate === details.planDate && response.keyFig === details.keyFig) {
+            details.quantity = response.quantity;
           }
         });
       });
