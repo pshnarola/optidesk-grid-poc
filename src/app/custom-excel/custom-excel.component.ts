@@ -70,6 +70,14 @@ export class CustomExcelComponent implements OnInit {
         { width: 200 },
         { width: 200 }
       ],
+      updateTable: (el, cell, x, y, source, value, id) => {
+        if (x === 0 && y === 0) {
+          cell.classList.add('readonly');
+        }
+        if (x === 1 && y === 0) {
+          cell.classList.add('readonly');
+        }
+      },
     });
   }
 
