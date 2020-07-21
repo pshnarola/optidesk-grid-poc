@@ -12,6 +12,7 @@ import { HotComponent } from './hot/hot.component';
 import { CustomComponent } from './custom/custom.component';
 import { FormsModule } from '@angular/forms';
 import { CustomUiComponent } from './custom-ui/custom-ui.component';
+import { CustomExcelComponent } from './custom-excel/custom-excel.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { CustomUiComponent } from './custom-ui/custom-ui.component';
     PlanviewAlternativeComponent,
     HotComponent,
     CustomComponent,
-    CustomUiComponent
+    CustomUiComponent,
+    CustomExcelComponent
   ],
   imports: [
     BrowserModule,

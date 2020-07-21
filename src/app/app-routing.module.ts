@@ -6,6 +6,7 @@ import { PlanviewAlternativeComponent } from './planview-alternative/planview-al
 import { HotComponent } from './hot/hot.component';
 import { CustomComponent } from './custom/custom.component';
 import { CustomUiComponent } from './custom-ui/custom-ui.component';
+import { CustomExcelComponent } from './custom-excel/custom-excel.component';
 
 
 const routes: Routes = [
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: 'custom-ui',
     component: CustomUiComponent
+  },
+  {
+    path: 'custom-excel',
+    component: CustomExcelComponent
   },
   {
     path: '',
