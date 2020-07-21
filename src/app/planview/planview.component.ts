@@ -3,7 +3,6 @@ import { SharedService } from '../shared/services/shared.service';
 import { HotTableRegisterer } from '@handsontable/angular';
 import Handsontable from 'handsontable';
 import * as d3 from 'd3';
-import * as Chart from 'chart.js'
 
 
 @Component({
@@ -56,7 +55,6 @@ export class PlanviewComponent implements OnInit {
         this.shared.getDemandDetails().then(response => {
             this.detailset = response['demands'];
             this.createGanttChart();
-            this.generateChartsJsBar();
         }).catch(error => {
         });
     }
@@ -70,7 +68,6 @@ export class PlanviewComponent implements OnInit {
             this.hotRegisterer.getInstance(this.tableId).loadData(this.detailset);
             this.createGanttChart();
             this.myChart.destroy();
-            this.generateChartsJsBar();
         }).catch(error => {
         });
     }
@@ -170,44 +167,5 @@ export class PlanviewComponent implements OnInit {
             .call(d3.axisBottom(x))
             .attr("transform", "translate(0," + height + ")")
 
-    }
-
-    generateChartsJsBar() {
-        this.column = [];
-        this.data = [];
-        this.detailset.forEach(element => {
-            this.column.push(element.planDate);
-            this.data.push(element.totalDemand);
-        });
-        this.canvas = document.getElementById('myChart');
-        this.ctx = this.canvas.getContext('2d');
-        this.myChart = new Chart(this.ctx, {
-            type: 'horizontalBar',
-            data: {
-                labels: this.column,
-                datasets: [{
-                    label: 'Planview Data',
-                    data: this.data,
-                    backgroundColor: 'rgb(220,220,220)',
-                    hoverBackgroundColor: 'rgb(169,169,169)',
-                    borderWidth: 1,
-                    barThickness: 40,
-                    barPercentage: 1.0,
-                    categoryPercentage: 1.0
-                }]
-            },
-            options: {
-                responsive: false,
-                display: true,
-                scales: {
-                    xAxes: [{
-                        stacked: true
-                    }],
-                    yAxes: [{
-                        stacked: true,
-                    }]
-                },
-            }
-        });
     }
 }

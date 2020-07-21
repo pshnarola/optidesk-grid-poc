@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import Handsontable from 'handsontable';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as d3 from 'd3';
-import * as Chart from 'chart.js';
 
 @Component({
     selector: 'app-forecast',
@@ -73,20 +72,12 @@ export class ForecastComponent implements OnInit {
         }
     };
 
-    // chart js
-    canvas: any;
-    ctx: any;
-    column = [];
-    data = [];
-    myChart: any;
-
     constructor(
         private modalService: NgbModal
     ) { }
 
     ngOnInit() {
         this.generateForecastGrid();
-        this.generateChartsJsBar();
     }
 
     generateForecastGrid() {
@@ -114,8 +105,8 @@ export class ForecastComponent implements OnInit {
                     const columnName = change[0][1];
                     this.detailset[this.gridColumnIndex[columnName]].forecast = newValue;
                     this.createGanttChart();
-                    this.myChart.data.datasets[0].data[this.gridColumnIndex[columnName]] = newValue;
-                    this.myChart.update();
+                    // this.myChart.data.datasets[0].data[this.gridColumnIndex[columnName]] = newValue;
+                    // this.myChart.update();
                 }
             }
         });
@@ -148,7 +139,6 @@ export class ForecastComponent implements OnInit {
         this.modalRef.result.then((result) => {
             this.hotForecastGrid.loadData(this.createForecastGridData());
             this.createGanttChart();
-            this.generateChartsJsBar();
         }, (reason) => {
         });
     }
@@ -237,93 +227,4 @@ export class ForecastComponent implements OnInit {
             .attr('transform', 'translate(0,' + height + ')');
     }
 
-    generateChartsJsBar() {
-        this.column = [];
-        this.data = [];
-        this.detailset.forEach(element => {
-            this.column.push(element.bucket);
-            this.data.push(element.forecast);
-        });
-        this.canvas = document.getElementById('myChart');
-        this.ctx = this.canvas.getContext('2d');
-        this.myChart = new Chart(this.ctx, {
-            type: 'horizontalBar',
-            data: {
-                labels: this.column,
-                borderColor: '#000',
-                datasets: [{
-                    label: 'Forecast',
-                    data: this.data,
-                    backgroundColor: '#6bbee4',
-                    hoverBackgroundColor: '#1698d4',
-                    borderColor: '#6bbee4',
-                    hoverBorderColor: '#1698d4',
-                    borderSkipped: false,
-                    borderWidth: 2,
-                    barThickness: 'flex',
-                    barPercentage: 1,
-                    categoryPercentage: 0.5
-                }]
-            },
-            options: {
-                responsive: true,
-                legend: {
-                    display: false
-                },
-                display: true,
-                elements: {
-                    rectangle: {
-                        borderWidth: 2
-                    }
-                },
-                scales: {
-                    xAxes: [
-                        {
-                            position: 'top',
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Forecast',
-                                fontColor: '#333',
-                                fontSize: 14,
-                                fontStyle: 'bold'
-                            },
-                            gridLines: {
-                                offset: false,
-                                lineWidth: 0,
-                                zeroLineWidth: 2,
-                                zeroLineColor: '#333'
-                            },
-                            ticks: {
-                                fontColor: '#333',
-                                fontStyle: 'bold'
-                            },
-                            stacked: true
-                        }
-                    ],
-                    yAxes: [
-                        {
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Plan Bucket',
-                                fontColor: '#333',
-                                fontSize: 14,
-                                fontStyle: 'bold'
-                            },
-                            gridLines: {
-                                lineWidth: 0,
-                                zeroLineWidth: 2,
-                                zeroLineColor: '#333',
-                                offsetGridLines: true
-                            },
-                            ticks: {
-                                fontColor: '#333',
-                                fontStyle: 'bold'
-                            },
-                            stacked: true
-                        }
-                    ]
-                }
-            }
-        });
-    }
 }
