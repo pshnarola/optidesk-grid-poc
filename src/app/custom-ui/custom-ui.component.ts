@@ -16,6 +16,7 @@ export class CustomUiComponent implements OnInit {
   planDate: any;
   rowLabel: any;
   loadData = false;
+  tempArray = [];
 
   constructor(
     private shared: SharedService
@@ -221,6 +222,8 @@ export class CustomUiComponent implements OnInit {
   }
 
   onBlurMethod(rowIndex, columnIndex, column) {
+    this.planDate = '';
+    this.rowLabel = '';
     this.planDate = column.planDate;
     this.rowLabel = this.planRowsConfig[rowIndex];
     if (this.pshDataSet.hasOwnProperty(column.planDate)) {
@@ -228,6 +231,10 @@ export class CustomUiComponent implements OnInit {
       // tslint:disable-next-line:max-line-length
       this.pshDataSet[this.planDate].totDemand = this.pshDataSet[this.planDate][this.rowLabel.keyFig] + this.pshDataSet[this.planDate].depDemand;
     }
+    this.tempArray.push({
+      planDate: this.planDate, keyFig: this.rowLabel.keyFig,
+      quantity: Number(this.pshDataSet[this.planDate][this.rowLabel.keyFig])
+    });
     this.generateLineChart();
   }
 
@@ -237,19 +244,17 @@ export class CustomUiComponent implements OnInit {
       keyFig: this.rowLabel.keyFig,
       quantity: Number(this.pshDataSet[this.planDate][this.rowLabel.keyFig])
     };
-
-    this.shared.updatePlanData(json).then(res => {
-      res.forEach(response => {
-        this.tableDetails.forEach(details => {
-          if (response.planDate === details.planDate && response.keyFig === details.keyFig) {
-            details.quantity = response.quantity;
-          }
-        });
-      });
-      this.generateRowData();
-    }).catch(error => {
-    });
-
+    // this.shared.updatePlanData(json).then(res => {
+    //   res.forEach(response => {
+    //     this.tableDetails.forEach(details => {
+    //       if (response.planDate === details.planDate && response.keyFig === details.keyFig) {
+    //         details.quantity = response.quantity;
+    //       }
+    //     });
+    //   });
+    //   this.generateRowData();
+    // }).catch(error => {
+    // });
   }
 
 }
