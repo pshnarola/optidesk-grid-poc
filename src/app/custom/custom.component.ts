@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PLAN_ROWS } from './plan.config';
 import * as d3 from 'd3';
 import { SharedService } from '../shared/services/shared.service';
 
@@ -9,8 +8,8 @@ import { SharedService } from '../shared/services/shared.service';
     styleUrls: ['./custom.component.scss']
 })
 export class CustomComponent implements OnInit {
-    planRowsConfig = PLAN_ROWS;
-    columnConfig: any;
+    planRowsConfig = [];
+    columnConfig = [];
     tableDetails: any;
     dataset = [];
     pshDataSet = {};
@@ -24,33 +23,37 @@ export class CustomComponent implements OnInit {
         this.fetchData();
     }
 
-    async fetchData() {
-        return await Promise.all([
-            this.shared.getPlanDates()
+    fetchData() {
+        Promise.all([
+            this.shared.getPlanDates(),
+            this.shared.getKeyFigures()
         ]).then(res => {
             this.columnConfig = res[0];
+            this.planRowsConfig = res[1];
             this.columnConfig.unshift({ planDate: 'Key Figure' });
         });
     }
 
     loadPlanViewData() {
+        this.loadData = false;
         this.shared.getPlanView().then(response => {
             this.tableDetails = response;
-            this.loadData = true;
             this.generateRowData();
         }).catch(error => {
         });
     }
 
     generateRowData() {
+        this.chartData = [];
         this.tableDetails.forEach(element => {
             if (!this.pshDataSet.hasOwnProperty(element.planDate)) {
                 this.pshDataSet[element.planDate] = {};
-                this.chartData.push(this.pshDataSet[element.planDate]);
             }
             this.pshDataSet[element.planDate].timescale = element.planDate;
             this.pshDataSet[element.planDate][element.keyFig] = element.quantity;
+            this.chartData.push(this.pshDataSet[element.planDate]);
         });
+        this.loadData = true;
         this.generateLineChart();
     }
 
@@ -65,7 +68,6 @@ export class CustomComponent implements OnInit {
         d3.selectAll('circle').remove();
         d3.selectAll('text').remove();
 
-        // set the dimensions and margins of the graph
         const margin = { top: 20, right: 80, bottom: 150, left: 50 };
         const svg = d3.select('svg');
         const width = +svg.attr('width') - margin.left - margin.right;
@@ -100,11 +102,12 @@ export class CustomComponent implements OnInit {
             };
         });
         x.domain(this.chartData.map(d => d.timescale));
-        y.domain([0, d3.max(trends, c => {
+        const maxY = d3.max(trends, c => {
             return d3.max(c.values, v => {
                 return v.total;
             });
-        })]);
+        });
+        y.domain([0, Math.ceil(maxY / 100) * 100]);
 
         // Draw the legend
         const legend = g.selectAll('g')
@@ -217,16 +220,13 @@ export class CustomComponent implements OnInit {
         }
     }
 
-    onBlurMethod(rowIndex, columnIndex, column) {
+    onBlurMethod(row, column) {
         const planDate = column.planDate;
-        const rowLabel = this.planRowsConfig[rowIndex];
         const json = {
-            // tslint:disable-next-line:object-literal-shorthand
-            planDate: planDate,
-            keyFig: rowLabel.keyFig,
-            quantity: Number(this.pshDataSet[planDate][rowLabel.keyFig])
+            planDate,
+            keyFig: row.keyFig,
+            quantity: Number(this.pshDataSet[planDate][row.keyFig])
         };
-        console.log('json', json)
         this.shared.updatePlanData(json).then(res => {
             res.forEach(response => {
                 this.tableDetails.forEach(details => {

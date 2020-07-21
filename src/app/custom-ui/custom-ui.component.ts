@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PLAN_ROWS } from '../custom/plan.config';
 import * as d3 from 'd3';
 import { SharedService } from '../shared/services/shared.service';
 
@@ -9,7 +8,7 @@ import { SharedService } from '../shared/services/shared.service';
   styleUrls: ['./custom-ui.component.scss']
 })
 export class CustomUiComponent implements OnInit {
-  planRowsConfig = PLAN_ROWS;
+  planRowsConfig = [];
   columnConfig: any;
   tableDetails: any;
   pshDataSet = {};
@@ -28,8 +27,10 @@ export class CustomUiComponent implements OnInit {
 
   async fetchData() {
     return await Promise.all([
-      this.shared.getPlanDates()
+      this.shared.getPlanDates(),
+      this.shared.getKeyFigures(),
     ]).then(res => {
+      this.planRowsConfig = res[1];
       this.columnConfig = res[0];
       this.columnConfig.unshift({ planDate: 'Key Figure' });
     });
