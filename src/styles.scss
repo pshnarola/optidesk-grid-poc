@@ -90,6 +90,11 @@ hr {
     color: #222;
 }
 
+.jexcel>tbody>tr>td.readonly {
+    color: #222;
+    text-align: left;
+}
+
 .excel th,
 .excel td,
 .jexcel th,
