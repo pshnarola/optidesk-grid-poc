@@ -29,7 +29,7 @@
                                 <input *ngIf="row.editable" type="text"
                                     [(ngModel)]="pshDataSet[column.planDate][row.keyFig]"
                                     [value]="pshDataSet[column.planDate][row.keyFig]"
-                                    (blur)="onBlurMethod( row, column)">
+                                    (blur)="onBlurMethod(row, column)">
                             </ng-container>
                         </ng-template>
                         <!-- <ng-template #loadplanData>

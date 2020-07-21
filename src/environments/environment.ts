@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   DOMAIN: {
-    URL: 'http://192.168.100.41:8090/'
+    // URL: 'http://192.168.100.41:8090/'
+       URL: 'http://oddev.westus.cloudapp.azure.com:8082/'
   },
 };
 
