@@ -13,9 +13,14 @@
         </div>
         <div class="excel-action">
             <div class="action-wrapper">
-                <a href="">Upload</a>
-                <a href="">Download</a>
+                <span>
+                    <input id="uploadFile" accept=".xlsx" [(ngModel)]="videoFile" type="file"
+                        (change)="uploadVideo($event.target.files)">
+                </span>
+                <a>Upload</a>
+                <a (click)="downloadExcel()">Download</a>
                 <a href="">Save</a>
+                <a>New</a>
             </div>
         </div>
         <div #sheet id="excel"></div>

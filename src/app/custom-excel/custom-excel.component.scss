@@ -29,8 +29,24 @@
     color: #444;
     padding: 0 7px;
     border-right: 1px solid #444;
+    cursor: pointer;
 }
 .excel-action .action-wrapper a:last-child{
     border-right: none;
 }
 
+.excel-action .action-wrapper span {
+    font-size: 14px;
+    color: #444;
+    padding: 0 7px;
+    border-right: 1px solid #444;
+    cursor: pointer;
+}
+
+.excel-action .action-wrapper input {
+    width: 100px;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
