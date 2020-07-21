@@ -1,0 +1,36 @@
+#excel {
+    width: 100%;
+    overflow: scroll;
+}
+
+.excel-header {
+    background-color: #2D9C5F;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.excel-header span {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.excel-action .action-wrapper{
+    background-color: #f3f2f1;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.excel-action .action-wrapper a{
+    font-size: 14px;
+    color: #444;
+    padding: 0 7px;
+    border-right: 1px solid #444;
+}
+.excel-action .action-wrapper a:last-child{
+    border-right: none;
+}
+

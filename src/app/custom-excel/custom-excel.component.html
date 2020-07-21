@@ -1,1 +1,26 @@
-<p>custom-excel works!</p>
+<h1 class="ml-3 mt-5">Custom Excel</h1>
+<button class="btn btn-lg btn-outline-primary ml-5" (click)="openCustomExcel(excelContent)">Upload</button>
+<ng-template #excelContent let-modal id="exampleModal">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add Forecast Details</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="excel-header">
+            <span>Optidesk - Plan View</span>
+        </div>
+        <div class="excel-action">
+            <div class="action-wrapper">
+                <a href="">Upload</a>
+                <a href="">Download</a>
+                <a href="">Save</a>
+            </div>
+        </div>
+        <div #sheet id="excel"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+</ng-template>
