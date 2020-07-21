@@ -28,10 +28,17 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/jexcel/dist/jexcel.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/jexcel/dist/jexcel.min.css",
+               "node_modules/jsuites/dist/jsuites.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jexcel/dist/jexcel.js",
+              "node_modules/jexcel/dist/jexcel.min.js",
+              "node_modules/jsuites/dist/jsuites.js"
+            ]
           },
           "configurations": {
             "production": {
