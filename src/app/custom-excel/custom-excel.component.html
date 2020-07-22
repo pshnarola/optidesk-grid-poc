@@ -17,15 +17,20 @@
                     <input id="uploadFile" accept=".xlsx" [(ngModel)]="videoFile" type="file"
                         (change)="uploadVideo($event.target.files)">
                 </span>
-                <a>Upload</a>
+                <!-- <a>Upload</a> -->
                 <a (click)="downloadExcel()">Download</a>
                 <a href="">Save</a>
-                <a>New</a>
+                <!-- <a (click)="creatNewExcel()">New</a> -->
             </div>
         </div>
         <div #sheet id="excel"></div>
     </div>
+    <span *ngIf="errorMsg" style="color: red;padding-left: 17px;">{{errorMsg}}</span>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
     </div>
 </ng-template>
+
+<hr>
+<br>
+{{excel | json}}

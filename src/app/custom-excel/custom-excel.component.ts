@@ -14,10 +14,6 @@ export class CustomExcelComponent implements OnInit {
   private modalRef: NgbModalRef;
   excelData = [
     {
-      bucket: 'BUCKET',
-      forecast: 'FORECAST'
-    },
-    {
       bucket: 'wk01',
       forecast: ''
     },
@@ -56,10 +52,19 @@ export class CustomExcelComponent implements OnInit {
   storeData: any;
   worksheet: any;
   jsonData: any;
+  excel = [];
+  errorMsg: any;
+  columnObj = [];
+  newCreatedExcelData = [];
+  tempArray = [];
+  temp = [];
+  index = 0;
+  newCreatedExcel = [];
 
   constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
+    this.excel = this.excelData;
   }
 
   openCustomExcel(excelContent) {
@@ -71,34 +76,52 @@ export class CustomExcelComponent implements OnInit {
   }
 
   createExcel() {
+    this.columnObj = [
+      { width: 200, name: 'bucket', title: 'PLANBUCKET', readOnly: false },
+      { width: 200, name: 'forecast', title: 'FORECAST', type: 'numeric', decimal: ',' }
+    ];
     jexcel(document.getElementById('excel'), {
-      data: this.excelData,
+      data: this.excel,
+      columns: this.columnObj,
       minDimensions: [30, 15],
-      columns: [
-        { width: 200 },
-        { width: 200 }
-      ],
-      updateTable: (el, cell, x, y, source, value, id) => {
-        if (x === 0 && y === 0) {
-          cell.classList.add('readonly');
-        }
-        if (x === 1 && y === 0) {
-          cell.classList.add('readonly');
+      onchange: (instance, cell, colIndex, rowIndex, value, oldValue) => {
+        if (this.excel.length !== 0 && this.excel.length !== 15) {
+          if (rowIndex < this.excel.length) {
+            if (colIndex === 0 && value !== oldValue) {
+              this.errorMsg = 'Plan bucket is not as per required formate';
+            } else if (colIndex === 1) {
+              const columnName = this.columnObj[colIndex].name;
+              this.excel[rowIndex][columnName] = value;
+            }
+          } else {
+            this.errorMsg = 'Extra Data has been Added Only ' + this.excel.length + 'Plan Buckets are available';
+          }
+        } else {
+          this.createNewExcelJsonTemp(colIndex, rowIndex, value);
         }
       },
     });
   }
 
+  createNewExcelJsonTemp(colindex, rowindex, data) {
+    this.tempArray = [];
+    const groupByRow = {};
+    const groupBy = [];
+    this.newCreatedExcelData.push({ colIndex: colindex, rowIndex: rowindex, value: data });
+    this.newCreatedExcelData.forEach((a) => {
+      groupByRow[a.rowIndex] = groupByRow[a.rowIndex] || [];
+      groupByRow[a.rowIndex].push({ colIndex: a.colIndex, rowIndex: a.rowIndex, value: a.value });
+    });
+    groupBy.push(groupByRow);
+  }
+
   uploadVideo(files: File[]) {
-    console.log('file', files);
     const fileExt = files[files.length - 1].name.substr(files[files.length - 1].name.length - 4);
-    console.log('extension', fileExt);
     if (fileExt === 'xlsx') {
       this.fileList.push(...files);
       this.fileUploaded = files[0];
       this.readExcel();
     } else {
-      console.log('not excel');
     }
   }
 
@@ -113,7 +136,6 @@ export class CustomExcelComponent implements OnInit {
       const workbook = XLSX.read(bstr, { type: 'binary' });
       const firstSheetName = workbook.SheetNames[0];
       this.worksheet = workbook.Sheets[firstSheetName];
-      console.log('workbook', workbook);
       this.createJson();
     };
     readFile.readAsArrayBuffer(this.fileUploaded);
@@ -121,21 +143,29 @@ export class CustomExcelComponent implements OnInit {
 
   createJson() {
     this.jsonData = XLSX.utils.sheet_to_json(this.worksheet, { raw: false });
-    this.jsonData = JSON.stringify(this.jsonData);
     const data: Blob = new Blob([this.jsonData], { type: 'application/json' });
-    console.log('uploaded excel json', this.jsonData);
+    this.excel = [];
+    document.getElementById('excel').innerHTML = '';
+    this.excel = this.jsonData;
+    this.createExcel();
   }
 
   downloadExcel() {
     const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const EXCEL_EXTENSION = '.xlsx';
     const fileName = 'Sample';
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.excelData);
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.excel);
     const workbook: XLSX.WorkBook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data: Blob = new Blob([excelBuffer], {
       type: EXCEL_TYPE
     });
     FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+  }
+
+  creatNewExcel() {
+    this.excel = [];
+    document.getElementById('excel').innerHTML = '';
+    this.createExcel();
   }
 }
