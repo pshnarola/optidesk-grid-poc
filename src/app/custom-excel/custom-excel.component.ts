@@ -78,20 +78,30 @@ export class CustomExcelComponent implements OnInit {
   createExcel() {
     this.columnObj = [
       { width: 200, name: 'bucket', title: 'PLANBUCKET', readOnly: false },
-      { width: 200, name: 'forecast', title: 'FORECAST', type: 'numeric', decimal: ',' }
+      { width: 200, name: 'forecast', title: 'FORECAST', decimal: ',' }
     ];
     jexcel(document.getElementById('excel'), {
       data: this.excel,
       columns: this.columnObj,
       minDimensions: [30, 15],
+      rowResize: true,
+      columnDrag: true,
+      contextMenu: false,
       onchange: (instance, cell, colIndex, rowIndex, value, oldValue) => {
+        console.log('row index-->', rowIndex, 'value -->', value, 'excel length --->', this.excel);
         if (this.excel.length !== 0 && this.excel.length !== 15) {
           if (rowIndex < this.excel.length) {
-            if (colIndex === 0 && value !== oldValue) {
-              this.errorMsg = 'Plan bucket is not as per required formate';
-            } else if (colIndex === 1) {
+            if (colIndex === 1) {
               const columnName = this.columnObj[colIndex].name;
               this.excel[rowIndex][columnName] = value;
+            } else if (colIndex === 0) {
+              if (value !== this.excel[rowIndex].bucket) {
+                this.errorMsg = 'Plan bucket is not as per required formate';
+              } else {
+                this.errorMsg = '';
+                const columnName = this.columnObj[colIndex].name;
+                this.excel[rowIndex][columnName] = value;
+              }
             }
           } else {
             this.errorMsg = 'Extra Data has been Added Only ' + this.excel.length + 'Plan Buckets are available';
