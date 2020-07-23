@@ -43,10 +43,34 @@
     cursor: pointer;
 }
 
-.excel-action .action-wrapper input {
-    width: 100px;
-}
-
-.custom-file-input::-webkit-file-upload-button {
-    visibility: hidden;
-}
+.file {
+    cursor: pointer;
+    position: relative;
+    width: 16%;
+  }
+  
+  .file > input[type="file"] {
+    cursor: pointer;
+    position: absoulte;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0
+  }
+  
+  .file > label {
+    position: absolute;
+    top: 5 !important;
+    right: 0;
+    left: 0;
+    bottom: -3px !important;
+    padding: 0 7px;
+    color: #444;
+    border-radius: 0px;
+    line-height: 21px;
+    text-align: center;
+    cursor: pointer;
+    border-right: 1px solid #444;
+  }
+  
