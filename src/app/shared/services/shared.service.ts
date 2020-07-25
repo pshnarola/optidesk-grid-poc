@@ -39,4 +39,19 @@ export class SharedService {
     return this.http.put<any>(url, body).toPromise();
   }
 
+  downloadExcel(body) {
+    const httpOptionObj = {};
+    httpOptionObj['responseType'] = 'Blob' as 'json';
+    httpOptionObj['observe'] = 'response';
+    const url = environment.DOMAIN.URL + 'excel-download';
+    return this.http.post<any>(url, body, httpOptionObj).toPromise();
+  }
+
+  uploadExcel(document) {
+    const httpOptionObj = {};
+    httpOptionObj['Content-Type'] = 'multipart/form-data';
+    httpOptionObj['Accept'] = 'application/json';
+    const url = environment.DOMAIN.URL + 'excel-validate?type=forecast';
+    return this.http.post<any>(url, document, httpOptionObj).toPromise();
+  }
 }
