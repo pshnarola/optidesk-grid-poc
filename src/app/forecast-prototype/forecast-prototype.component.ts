@@ -4,6 +4,8 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as jexcel from 'jexcel';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { FormGroup } from '@angular/forms';
+import {NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-forecast-prototype',
@@ -12,7 +14,7 @@ import * as FileSaver from 'file-saver';
 })
 export class ForecastPrototypeComponent implements OnInit {
   tableDetails: any;
-  loadData = false;
+  errorMsg: any;
   dataSet = {};
   chartData = [];
   forecastData = [
@@ -99,20 +101,24 @@ export class ForecastPrototypeComponent implements OnInit {
   ];
   fileList = [];
   gridData = [];
-  errorMsg: any;
   columnObj = [];
-
+  loadData = false;
+  showDatePicker = false;
+  public searchForecast: any = {};
+  public userForm: FormGroup;
   private modalRef: NgbModalRef;
+  model: NgbDateStruct;
+  date: {year: number, month: number, day: number};
 
   constructor(
     private shared: SharedService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private calendar: NgbCalendar
   ) { }
 
   ngOnInit(): void {
     this.gridData = this.forecastData;
   }
-
 
   uploadVideo(files: File[]) {
     const fileExt = files[files.length - 1].name.substr(files[files.length - 1].name.length - 4);
@@ -195,5 +201,17 @@ export class ForecastPrototypeComponent implements OnInit {
       type: EXCEL_TYPE
     });
     FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+  }
+
+  selectedPEriod(period) {
+    const selectedPeriod = period;
+    if (selectedPeriod === 'Weekly') {
+      this.showDatePicker = true;
+    }
+  }
+
+  onSubmit(value) {
+    console.log('value', value);
+    console.log('date', this.model);
   }
 }
