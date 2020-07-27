@@ -23,8 +23,8 @@
     </div>
     <div class="col-8">
         <div class="action">
-            <button class="btn btn-outline-dark mb-3 mt-3">Inline Edit</button>
-            <button class="btn btn-outline-dark mb-3 mt-3 ml-5">Copy Paste</button>
+            <button class="btn btn-outline-dark mb-3 mt-3" (click)="downloadExcel()">Download</button>
+            <button class="btn btn-outline-dark mb-3 mt-3 ml-5" (click)="openExcel(excelContent)">Copy Paste</button>
             <div class="input-group mb-3">
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputGroupFile02" (change)="uploadVideo($event.target.files)">
@@ -35,7 +35,7 @@
         </div>
         <div class="zui-wrapper">
             <div class="zui-scroller">
-                <table class="excel zui-table">
+                <!-- <table class="excel zui-table">
                     <thead>
                         <tr>
                             <th *ngFor="let column of gridData; let columnIndex = index"
@@ -59,8 +59,53 @@
                             </td>
                         </tr>
                     </tbody>
+                </table> -->
+
+                <table class="excel zui-table">
+                    <thead>
+                        <tr>
+                            <th class="text-left zui-sticky-col">PlanBucket</th>
+                            <th *ngFor="let column of gridData; let columnIndex = index">
+                                {{column.planBucket}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-left zui-sticky-col">Forecast</td>
+                            <td *ngFor="let row of gridData; let rowIndex = index;">
+                                <ng-container *ngIf="rowIndex==0;else elseBlock">
+                                    <p>
+                                        {{row.forecast}}
+                                    </p>
+                                </ng-container>
+                                <ng-template #elseBlock>
+                                    {{row.forecast}}
+                                </ng-template>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #excelContent let-modal id="exampleModal">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add Forecast Details</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="excel-header">
+            <span>Optidesk - Plan View</span>
+        </div>
+        <div #sheet id="excel"></div>
+    </div>
+    <span *ngIf="errorMsg" style="color: red;padding-left: 17px;">{{errorMsg}}</span>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+</ng-template>

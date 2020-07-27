@@ -14,3 +14,16 @@
 .input-group {
     width: 25% !important;
 }
+
+#excel {
+    width: 100%;
+    overflow: scroll;
+}
+
+.excel-header {
+    background-color: #2D9C5F;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
