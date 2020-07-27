@@ -11,6 +11,11 @@
     display: none !important;
 }
 
+.custom-file-label {
+    color: #343a40;
+    border-color: #343a40;
+}
+
 .input-group {
     width: 25% !important;
 }
@@ -26,4 +31,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.input-group {
+    display: inline-flex !important;
 }
