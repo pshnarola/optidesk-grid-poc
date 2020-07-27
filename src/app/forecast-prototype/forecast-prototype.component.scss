@@ -2,3 +2,15 @@
     background-color:#e1e6e5;
     border-right: 1px solid black;
 }
+
+.row {
+    height: 562px !important;
+}
+
+.custom-file-label::after {
+    display: none !important;
+}
+
+.input-group {
+    width: 25% !important;
+}

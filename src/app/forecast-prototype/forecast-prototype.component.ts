@@ -97,11 +97,35 @@ export class ForecastPrototypeComponent implements OnInit {
       forecast: ''
     },
   ];
+  fileList = [];
+  gridData = [];
   constructor(
     private shared: SharedService
   ) { }
 
   ngOnInit(): void {
+    this.gridData = this.forecastData;
   }
 
+
+  uploadVideo(files: File[]) {
+    const fileExt = files[files.length - 1].name.substr(files[files.length - 1].name.length - 4);
+    if (fileExt === 'xlsx') {
+      this.fileList.push(...files);
+      const formData = new FormData();
+      this.fileList.forEach((element, index) => {
+        formData.append('file', element);
+      });
+      this.shared.uploadExcel(formData).then(res => {
+        this.gridData = [];
+        this.gridData = res;
+        this.gridData.unshift({
+          planBucket: 'PlanBucket',
+          forecast: 'Forecast'
+        });
+      }).catch(error => {
+      });
+    } else {
+    }
+  }
 }

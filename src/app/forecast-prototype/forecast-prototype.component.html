@@ -3,8 +3,7 @@
         <form>
             <div class="form-group mt-5">
                 <label for="exampleInputEmail1">Mat No</label>
-                <input type="text" class="form-control"
-                    placeholder="Enter Marerial No">
+                <input type="text" class="form-control" placeholder="Enter Marerial No">
             </div>
             <div class="form-group">
                 <label>Loc No</label>
@@ -13,12 +12,12 @@
             <div class="form-group">
                 <label>Period</label>
                 <select class="form-control">
-                  <option selected>Choose...</option>
-                  <option>Daily</option>
-                  <option>Weekly</option>
-                  <option>Monthly</option>
+                    <option selected>Choose...</option>
+                    <option>Daily</option>
+                    <option>Weekly</option>
+                    <option>Monthly</option>
                 </select>
-              </div>
+            </div>
             <button type="submit" class="btn btn-outline-dark mb-5">Submit</button>
         </form>
     </div>
@@ -26,15 +25,20 @@
         <div class="action">
             <button class="btn btn-outline-dark mb-3 mt-3">Inline Edit</button>
             <button class="btn btn-outline-dark mb-3 mt-3 ml-5">Copy Paste</button>
-            <button class="btn btn-outline-dark mb-3 mt-3 ml-5">Upload</button>
-            <button class="btn btn-outline-dark mb-3 mt-3 ml-5">Download</button>
+            <div class="input-group mb-3">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile02" (change)="uploadVideo($event.target.files)">
+                    <label class="custom-file-label" for="inputGroupFile02"
+                        aria-describedby="inputGroupFileAddon02">Upload</label>
+                </div>
+            </div>
         </div>
         <div class="zui-wrapper">
             <div class="zui-scroller">
                 <table class="excel zui-table">
                     <thead>
                         <tr>
-                            <th *ngFor="let column of forecastData; let columnIndex = index"
+                            <th *ngFor="let column of gridData; let columnIndex = index"
                                 [ngClass]="{'text-left zui-sticky-col': columnIndex === 0}">
                                 {{column.planBucket}}
                             </th>
@@ -42,7 +46,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td *ngFor="let row of forecastData; let rowIndex = index;"
+                            <td *ngFor="let row of gridData; let rowIndex = index;"
                                 [ngClass]="{'zui-sticky-col': rowIndex === 0}">
                                 <ng-container *ngIf="rowIndex==0;else elseBlock">
                                     <p>
