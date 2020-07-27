@@ -7,6 +7,7 @@ import { HotComponent } from './hot/hot.component';
 import { CustomComponent } from './custom/custom.component';
 import { CustomUiComponent } from './custom-ui/custom-ui.component';
 import { CustomExcelComponent } from './custom-excel/custom-excel.component';
+import { ForecastPrototypeComponent } from './forecast-prototype/forecast-prototype.component';
 
 
 const routes: Routes = [
@@ -39,8 +40,12 @@ const routes: Routes = [
     component: CustomExcelComponent
   },
   {
+    path: 'forecast-prototype',
+    component: ForecastPrototypeComponent
+  },
+  {
     path: '',
-    redirectTo: 'custom',
+    redirectTo: 'forecast-prototype',
     pathMatch: 'full'
   }
 ];

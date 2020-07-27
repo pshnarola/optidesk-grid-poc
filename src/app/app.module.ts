@@ -13,6 +13,7 @@ import { CustomComponent } from './custom/custom.component';
 import { FormsModule } from '@angular/forms';
 import { CustomUiComponent } from './custom-ui/custom-ui.component';
 import { CustomExcelComponent } from './custom-excel/custom-excel.component';
+import { ForecastPrototypeComponent } from './forecast-prototype/forecast-prototype.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { CustomExcelComponent } from './custom-excel/custom-excel.component';
     HotComponent,
     CustomComponent,
     CustomUiComponent,
-    CustomExcelComponent
+    CustomExcelComponent,
+    ForecastPrototypeComponent
   ],
   imports: [
     BrowserModule,
