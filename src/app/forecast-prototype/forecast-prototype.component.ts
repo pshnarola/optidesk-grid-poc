@@ -5,7 +5,7 @@ import * as jexcel from 'jexcel';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { FormGroup } from '@angular/forms';
-import {NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-forecast-prototype',
@@ -103,12 +103,14 @@ export class ForecastPrototypeComponent implements OnInit {
   gridData = [];
   columnObj = [];
   loadData = false;
-  showDatePicker = false;
+  showDailyPicker = false;
+  showMonthlyPicker = false;
+  showWeeklyPicker = false;
   public searchForecast: any = {};
   public userForm: FormGroup;
   private modalRef: NgbModalRef;
   model: NgbDateStruct;
-  date: {year: number, month: number, day: number};
+  date: { year: number, month: number, day: number };
 
   constructor(
     private shared: SharedService,
@@ -205,12 +207,105 @@ export class ForecastPrototypeComponent implements OnInit {
 
   selectedPEriod(period) {
     const selectedPeriod = period;
-    if (selectedPeriod === 'Weekly') {
-      this.showDatePicker = true;
+    if (selectedPeriod === 'Daily') {
+      this.showDailyPicker = true;
+      this.showWeeklyPicker = false;
+      this.showMonthlyPicker = false;
+    } else if (selectedPeriod === 'Monthly') {
+      this.showDailyPicker = false;
+      this.showWeeklyPicker = false;
+      this.showMonthlyPicker = true;
+    } else if (selectedPeriod === 'Weekly') {
+      this.showDailyPicker = false;
+      this.showWeeklyPicker = true;
+      this.showMonthlyPicker = false;
     }
   }
 
   onSubmit(value) {
+    this.gridData = [];
+    this.gridData = [
+      {
+        planBucket: 'WK.01 2020',
+        forecast: 234
+      },
+      {
+        planBucket: 'WK.02 2020',
+        forecast: 565
+      },
+      {
+        planBucket: 'WK.03 2020',
+        forecast: 676
+      },
+      {
+        planBucket: 'WK.04 2020',
+        forecast: 90
+      },
+      {
+        planBucket: 'WK.05 2020',
+        forecast: 567
+      },
+      {
+        planBucket: 'WK.06 2020',
+        forecast: 78
+      },
+      {
+        planBucket: 'WK.07 2020',
+        forecast: 67
+      },
+      {
+        planBucket: 'WK.08 2020',
+        forecast: 12
+      },
+      {
+        planBucket: 'WK.08 2020',
+        forecast: 56
+      },
+      {
+        planBucket: 'WK.10 2020',
+        forecast: 9
+      },
+      {
+        planBucket: 'WK.11 2020',
+        forecast: 67
+      },
+      {
+        planBucket: 'WK.12 2020',
+        forecast: 445
+      },
+      {
+        planBucket: 'WK.13 2020',
+        forecast: 677
+      },
+      {
+        planBucket: 'WK.14 2020',
+        forecast: 78
+      },
+      {
+        planBucket: 'WK.15 2020',
+        forecast: 56
+      },
+      {
+        planBucket: 'WK.16 2020',
+        forecast: 976
+      },
+      {
+        planBucket: 'WK.17 2020',
+        forecast: 78
+      },
+      {
+        planBucket: 'WK.18 2020',
+        forecast: 67
+      },
+      {
+        planBucket: 'WK.19 2020',
+        forecast: 3
+      },
+      {
+        planBucket: 'WK.20 2020',
+        forecast: 78
+      }
+    ];
     console.log('value', value);
     console.log('date', this.model);
   }

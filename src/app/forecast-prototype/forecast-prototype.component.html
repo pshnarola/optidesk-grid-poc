@@ -3,28 +3,69 @@
         <form name="form" #forecastForm="ngForm" novalidate>
             <div class="form-group mt-5">
                 <label for="exampleInputEmail1">Mat No</label>
-                <input type="text" class="form-control" placeholder="Enter Marerial No"
-                name="material_no" [(ngModel)]="searchForecast.material_no" #material_no="ngModel">
+                <input type="text" class="form-control" placeholder="Enter Material No" name="material_no"
+                    [(ngModel)]="searchForecast.material_no" #material_no="ngModel">
             </div>
             <div class="form-group">
                 <label>Loc No</label>
-                <input type="text" class="form-control" placeholder="Enter Location No" 
-                name="location_no" [(ngModel)]="searchForecast.location_no" #location_no="ngModel">
+                <input type="text" class="form-control" placeholder="Enter Location No" name="location_no"
+                    [(ngModel)]="searchForecast.location_no" #location_no="ngModel">
             </div>
             <div class="form-group">
                 <label>Period</label>
                 <select class="form-control" name="period" [(ngModel)]="searchForecast.period" #period="ngModel"
-                [ngModelOptions]="{standalone: true}" (change)="selectedPEriod(searchForecast.period)">
+                    [ngModelOptions]="{standalone: true}" (change)="selectedPEriod(searchForecast.period)">
                     <option selected>Choose...</option>
                     <option>Daily</option>
                     <option>Weekly</option>
                     <option>Monthly</option>
                 </select>
             </div>
-            <div class="form-group" *ngIf="showDatePicker">
+            <!-- <div class="form-group" *ngIf="showDatePicker">
                 <ngb-datepicker #dp [(ngModel)]="model" [ngModelOptions]="{standalone: true}" (navigate)="date = $event.next"></ngb-datepicker>
             </div>
-            <button type="submit" class="btn btn-outline-dark mb-5" (click)="onSubmit(forecastForm.value);">Submit</button>
+            <div class="form-group">
+                <label>From</label>
+                  <input class="form-control" placeholder="yyyy-mm-dd"
+                         name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">Select</button>
+                  </div>
+            </div> -->
+            <div *ngIf="showDailyPicker">
+                <div class="form-group">
+                    <label>From</label>
+                    <input class="form-control" name="fromDaily" [(ngModel)]="searchForecast.fromDaily" #fromDaily="ngModel" type="date"
+                        value="2011-08-19" id="example-date-input">
+                </div>
+                <div class="form-group">
+                    <label>To</label>
+                    <input class="form-control" name="toDaily" [(ngModel)]="searchForecast.toDaily" #toDaily="ngModel" type="date"
+                        value="2011-08-19" id="example-date-input">
+                </div>
+            </div>
+            <div *ngIf="showMonthlyPicker">
+                <div class="form-group">
+                    <label>From</label>
+                    <input class="form-control" type="month" value="2011-08" id="example-month-input" name="fromMonth" [(ngModel)]="searchForecast.fromMonth" #fromMonth="ngModel">
+                </div>
+                <div class="form-group">
+                    <label>To</label>
+                    <input class="form-control" type="month" value="2011-08" id="example-month-input" name="toMonth" [(ngModel)]="searchForecast.toMonth" #toMonth="ngModel">
+                </div>
+            </div>
+            <div *ngIf="showWeeklyPicker">
+                <div class="form-group">
+                    <label for="example-week-input" class="col-2 col-form-label">From</label>
+                    <input class="form-control" type="week" value="2011-W33" id="example-week-input" name="fromWeek" [(ngModel)]="searchForecast.fromWeek" #fromWeek="ngModel">
+                </div>
+                <div class="form-group">
+                    <label for="example-week-input" class="col-2 col-form-label">To</label>
+                    <input class="form-control" type="week" value="2011-W33" id="example-week-input" name="toWeek" [(ngModel)]="searchForecast.toWeek" #toWeek="ngModel">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-outline-dark mb-5"
+                (click)="onSubmit(forecastForm.value);">Submit</button>
         </form>
     </div>
     <div class="col-8">
@@ -33,7 +74,8 @@
             <button class="btn btn-outline-dark mb-3 mt-3 ml-5" (click)="openExcel(excelContent)">Copy Paste</button>
             <div class="input-group mb-5 ml-5 mt-3">
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="inputGroupFile02" (change)="uploadVideo($event.target.files)">
+                    <input type="file" class="custom-file-input" id="inputGroupFile02"
+                        (change)="uploadVideo($event.target.files)">
                     <label class="custom-file-label" for="inputGroupFile02"
                         aria-describedby="inputGroupFileAddon02">Upload</label>
                 </div>
