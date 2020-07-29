@@ -144,6 +144,7 @@ export class CustomExcelComponent implements OnInit {
   index = 0;
   newCreatedExcel = [];
   downloadArray = [];
+  mySpreadsheet: any;
 
   constructor(private modalService: NgbModal, private shared: SharedService) { }
 
@@ -164,7 +165,7 @@ export class CustomExcelComponent implements OnInit {
       { width: 200, name: 'planBucket', title: 'PLANBUCKET', readOnly: false },
       { width: 200, name: 'forecast', title: 'FORECAST', decimal: ',' }
     ];
-    jexcel(document.getElementById('excel'), {
+    this.mySpreadsheet = jexcel(document.getElementById('excel'), {
       data: this.excel,
       columns: this.columnObj,
       minDimensions: [30, 25],
@@ -172,16 +173,19 @@ export class CustomExcelComponent implements OnInit {
       columnDrag: true,
       contextMenu: false,
       onchange: (instance, cell, colIndex, rowIndex, value, oldValue) => {
-        // const cellName = jexcel('getRowData', rowIndex);
-        // console.log('cell', cell.getRowData());
-        // console.log('cell name', cellName);
+        // console.log('cell.innerText->', cell.innerText);
+        // console.log('value', rowIndex, 'row value-->', cell.innerText);
+        // console.log('data', this.excel.length);
+        console.log('row data', this.mySpreadsheet.getRowData(rowIndex));
+        // console.log('---', instance.innerText);
 
         const columnName = this.columnObj[colIndex].name;
         if (Number(colIndex) === 1) {
           if (this.excel[rowIndex] && this.excel[rowIndex].hasOwnProperty('planBucket')) {
             this.excel[rowIndex][columnName] = value;
           } else {
-            if (value.length === 0) {
+            console.log('length', this.excel.length, value.length, rowIndex, cell.innerText);
+            if (value.length === 0 && this.mySpreadsheet.getRowData(rowIndex)[0] === '') {
               this.errorMsg = '';
             } else {
               this.errorMsg = 'Extra Data has been Added Only ' + this.excel.length + 'Plan Buckets are available';
@@ -196,14 +200,14 @@ export class CustomExcelComponent implements OnInit {
               this.excel[rowIndex][columnName] = value;
             }
           } else {
-            if (value.length === 0) {
+            console.log('length', this.excel.length, value.length, rowIndex);
+            if (value.length === 0 && this.mySpreadsheet.getRowData(rowIndex)[1] === '') {
               this.errorMsg = '';
             } else {
-              this.errorMsg = 'Extra Data has been Added Only ' + this.excel.length + 'Plan Buckets are available';
+              this.errorMsg = 'Extra Data has been Added Only' + this.excel.length + 'Plan Buckets are available';
             }
           }
         }
-
         // this.excel[rowIndex][columnName] = value;
 
         // if (this.excel.length !== 0 && this.excel.length !== 15) {
