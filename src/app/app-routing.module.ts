@@ -28,11 +28,11 @@ const routes: Routes = [
     component: HotComponent
   },
   {
-    path: 'custom',
+    path: 'planview-approach-2',
     component: CustomComponent
   },
   {
-    path: 'custom-ui',
+    path: 'planview-approach-1',
     component: CustomUiComponent
   },
   {
@@ -45,7 +45,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'forecast-prototype',
+    redirectTo: 'planview-approach-1',
     pathMatch: 'full'
   }
 ];
