@@ -239,22 +239,17 @@ export class CustomUiComponent implements OnInit {
   }
 
   updatePlanview() {
-    const json = {
-      planDate: this.planDate,
-      keyFig: this.rowLabel.keyFig,
-      quantity: Number(this.pshDataSet[this.planDate][this.rowLabel.keyFig])
-    };
-    // this.shared.updatePlanData(json).then(res => {
-    //   res.forEach(response => {
-    //     this.tableDetails.forEach(details => {
-    //       if (response.planDate === details.planDate && response.keyFig === details.keyFig) {
-    //         details.quantity = response.quantity;
-    //       }
-    //     });
-    //   });
-    //   this.generateRowData();
-    // }).catch(error => {
-    // });
+    this.shared.updatePlanData(this.tempArray).then(res => {
+      res.forEach(response => {
+        this.tableDetails.forEach(details => {
+          if (response.planDate === details.planDate && response.keyFig === details.keyFig) {
+            details.quantity = response.quantity;
+          }
+        });
+      });
+      this.generateRowData();
+    }).catch(error => {
+    });
   }
 
 }

@@ -222,12 +222,8 @@ export class CustomComponent implements OnInit {
 
     onBlurMethod(row, column) {
         const planDate = column.planDate;
-        const json = {
-            planDate,
-            keyFig: row.keyFig,
-            quantity: Number(this.pshDataSet[planDate][row.keyFig])
-        };
-        this.shared.updatePlanData(json).then(res => {
+        const tempArray = [{planDate, keyFig: row.keyFig, quantity: Number(this.pshDataSet[planDate][row.keyFig])}];
+        this.shared.updatePlanData(tempArray).then(res => {
             res.forEach(response => {
                 this.tableDetails.forEach(details => {
                     if (response.planDate === details.planDate && response.keyFig === details.keyFig) {
