@@ -114,11 +114,11 @@ export class ForecastPrototypeComponent implements OnInit {
   private modalRef: NgbModalRef;
   model: NgbDateStruct;
   date: { year: number, month: number, day: number };
-
   selectedDate: any;
   planHorizon: any;
   startDate: any;
   endDate: any;
+  mySpreadsheet: any;
 
   datePickerConfig = {
     format: 'DD-MM-YYYY',
@@ -196,7 +196,7 @@ export class ForecastPrototypeComponent implements OnInit {
       { width: 200, name: 'planBucket', title: 'PLANBUCKET', readOnly: false },
       { width: 200, name: 'forecast', title: 'FORECAST', decimal: ',' }
     ];
-    jexcel(document.getElementById('excel'), {
+    this.mySpreadsheet = jexcel(document.getElementById('excel'), {
       data: this.gridData,
       columns: this.columnObj,
       minDimensions: [30, 25],
@@ -209,8 +209,8 @@ export class ForecastPrototypeComponent implements OnInit {
           if (this.gridData[rowIndex] && this.gridData[rowIndex].hasOwnProperty('planBucket')) {
             this.gridData[rowIndex][columnName] = value;
           } else {
-            if (value.length === 0) {
-              console.log('cell text', cell.text());
+            console.log('length', this.gridData.length, value.length, rowIndex, cell.innerText);
+            if (value.length === 0 && this.mySpreadsheet.getRowData(rowIndex)[0] === '') {
               this.errorMsg = '';
             } else {
               this.errorMsg = 'Extra Data has been Added Only ' + this.gridData.length + 'Plan Buckets are available';
@@ -225,10 +225,10 @@ export class ForecastPrototypeComponent implements OnInit {
               this.gridData[rowIndex][columnName] = value;
             }
           } else {
-            if (value.length === 0) {
+            if (value.length === 0 && this.mySpreadsheet.getRowData(rowIndex)[1] === '') {
               this.errorMsg = '';
             } else {
-              this.errorMsg = 'Extra Data has been Added Only ' + this.gridData.length + 'Plan Buckets are available';
+              this.errorMsg = 'Extra Data has been Added Only' + this.gridData.length + 'Plan Buckets are available';
             }
           }
         }

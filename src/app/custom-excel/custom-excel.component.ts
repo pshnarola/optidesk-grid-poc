@@ -173,12 +173,7 @@ export class CustomExcelComponent implements OnInit {
       columnDrag: true,
       contextMenu: false,
       onchange: (instance, cell, colIndex, rowIndex, value, oldValue) => {
-        // console.log('cell.innerText->', cell.innerText);
-        // console.log('value', rowIndex, 'row value-->', cell.innerText);
-        // console.log('data', this.excel.length);
-        console.log('row data', this.mySpreadsheet.getRowData(rowIndex));
-        // console.log('---', instance.innerText);
-
+        // console.log('row data', this.mySpreadsheet.getRowData(rowIndex));
         const columnName = this.columnObj[colIndex].name;
         if (Number(colIndex) === 1) {
           if (this.excel[rowIndex] && this.excel[rowIndex].hasOwnProperty('planBucket')) {
@@ -208,27 +203,6 @@ export class CustomExcelComponent implements OnInit {
             }
           }
         }
-        // this.excel[rowIndex][columnName] = value;
-
-        // if (this.excel.length !== 0 && this.excel.length !== 15) {
-        //   console.log('row index-->', rowIndex, 'value -->', value, 'excel length --->', this.excel);
-        //   if (rowIndex < this.excel.length) {
-        //     if (colIndex === 1) {
-        //       this.excel[rowIndex][columnName] = value;
-        //     } else if (colIndex === 0) {
-        //       if (value !== this.excel[rowIndex].bucket) {
-        //         this.errorMsg = 'Plan bucket is not as per required formate';
-        //       } else {
-        //         this.errorMsg = '';
-        //         this.excel[rowIndex][columnName] = value;
-        //       }
-        //     }
-        //   } else {
-        //     this.errorMsg = 'Extra Data has been Added Only ' + this.excel.length + 'Plan Buckets are available';
-        //   }
-        // } else {
-        //   this.createNewExcelJsonTemp(colIndex, rowIndex, value);
-        // }
       },
     });
   }
