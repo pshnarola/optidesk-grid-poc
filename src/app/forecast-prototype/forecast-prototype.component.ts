@@ -104,14 +104,58 @@ export class ForecastPrototypeComponent implements OnInit {
   columnObj = [];
   loadData = false;
   showDailyPicker = false;
-  showMonthlyPicker = false;
   showWeeklyPicker = false;
+  showMonthlyPicker = false;
+  errorFrom;
+  selectedValue = '1';
+  errorTo;
   public searchForecast: any = {};
   public userForm: FormGroup;
   private modalRef: NgbModalRef;
   model: NgbDateStruct;
   date: { year: number, month: number, day: number };
 
+  selectedDate: any;
+  planHorizon: any;
+  startDate: any;
+  endDate: any;
+
+  datePickerConfig = {
+    format: 'DD-MM-YYYY',
+    // firstCalendarDay: 0,
+    // 0 - Sunday, 1 - Monday,
+    // firstDayOfWeek: 'su',
+    monthFormat: 'MMM, YYYY',
+    // disableKeypress: false,
+    // allowMultiSelect: false,
+    // closeOnSelect: undefined,
+    // closeOnSelectDelay: 100,
+    // onOpenDelay: 0,
+    // weekDayFormat: 'ddd',
+    // appendTo: document.body,
+    // drops: 'down',
+    // opens: 'right',
+    // showNearMonthDays: true,
+    // showWeekNumbers: false,
+    // enableMonthSelector: true,
+    // yearFormat: 'YYYY',
+    // showGoToCurrent: true,
+    // dayBtnFormat: 'DD',
+    // monthBtnFormat: 'MMM',
+    // hours12Format: 'hh',
+    // hours24Format: 'HH',
+    // meridiemFormat: 'A',
+    // minutesFormat: 'mm',
+    // minutesInterval: 1,
+    // secondsFormat: 'ss',
+    // secondsInterval: 1,
+    // showSeconds: false,
+    // showTwentyFourHours: true,
+    // timeSeparator: ':',
+    // multipleYearsNavigateBy: 10,
+    // showMultipleYearsNavigation: false,
+    // locale: 'zh-cn',
+  };
   constructor(
     private shared: SharedService,
     private modalService: NgbModal,
@@ -220,6 +264,41 @@ export class ForecastPrototypeComponent implements OnInit {
       this.showWeeklyPicker = true;
       this.showMonthlyPicker = false;
     }
+  }
+
+  changeSelection(event) {
+    this.searchForecast.fromWeekly = null;
+    this.searchForecast.toWeekly = null;
+  }
+
+  isDisabledFromDate = (date: NgbDateStruct) => {
+    const value = parseFloat(this.selectedValue) === 7 ? 0 : parseFloat(this.selectedValue);
+    const d = new Date(date.year, date.month - 1, date.day);
+    return d.getDay() !== value;
+  }
+
+  isDisabledToDate = (date: NgbDateStruct) => {
+    const value = parseFloat(this.selectedValue);
+    const d = new Date(date.year, date.month - 1, date.day);
+    return d.getDay() !== (value - 1);
+  }
+
+  onModelEnter(value) {
+    console.log('value', value);
+    const json = {
+      p21: 'MODELID',
+      p22: value
+    };
+    const array = [];
+    array.push(json);
+    this.shared.getPlanHorizon(array).then(res => {
+      this.planHorizon = res.planHorizons[0];
+      const start = this.planHorizon.fromDate.split('/');
+      const end = this.planHorizon.toDate.split('/');
+      this.startDate = {year: Number(start[2]), month: Number(start[1]), day: Number(start[0])};
+      this.endDate = {year: Number(end[2]), month: Number(end[1]), day: Number(end[0])};
+    }).catch(error => {
+    });
   }
 
   onSubmit(value) {

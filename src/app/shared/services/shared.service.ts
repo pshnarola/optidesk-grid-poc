@@ -54,4 +54,9 @@ export class SharedService {
     const url = environment.DOMAIN.URL + 'excel-validate?type=forecast';
     return this.http.post<any>(url, document, httpOptionObj).toPromise();
   }
+
+  getPlanHorizon(body) {
+    const url = environment.DOMAIN.URL + 'plan-horizons/_search';
+    return this.http.post<any>(url, body).toPromise();
+  }
 }

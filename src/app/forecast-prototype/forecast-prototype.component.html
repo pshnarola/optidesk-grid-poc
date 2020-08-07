@@ -2,6 +2,12 @@
     <div class="col-4 left-panel">
         <form name="form" #forecastForm="ngForm" novalidate>
             <div class="form-group mt-5">
+                <label for="exampleInputEmail1">Model ID</label>
+                <input type="text" class="form-control" placeholder="Enter Model ID" name="model_id"
+                    [(ngModel)]="searchForecast.model_id" #model_id="ngModel"
+                    (blur)="onModelEnter($event.target.value)">
+            </div>
+            <div class="form-group">
                 <label for="exampleInputEmail1">Mat No</label>
                 <input type="text" class="form-control" placeholder="Enter Material No" name="material_no"
                     [(ngModel)]="searchForecast.material_no" #material_no="ngModel">
@@ -18,52 +24,73 @@
                     <option selected>Choose...</option>
                     <option>Daily</option>
                     <option>Weekly</option>
-                    <option>Monthly</option>
                 </select>
             </div>
-            <!-- <div class="form-group" *ngIf="showDatePicker">
-                <ngb-datepicker #dp [(ngModel)]="model" [ngModelOptions]="{standalone: true}" (navigate)="date = $event.next"></ngb-datepicker>
-            </div>
-            <div class="form-group">
+
+            <div class="form-group" *ngIf="showDailyPicker">
                 <label>From</label>
-                  <input class="form-control" placeholder="yyyy-mm-dd"
-                         name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">Select</button>
-                  </div>
+                <div class="input-group calendar-style">
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #d="ngbDatepicker"
+                        name="fromDaily" [(ngModel)]="searchForecast.fromDaily" #fromDaily="ngModel"
+                        [minDate]="startDate" [maxDate]="endDate">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" *ngIf="showDailyPicker">
+                <label>To</label>
+                <div class="input-group calendar-style">
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #d="ngbDatepicker"
+                        name="toDaily" [(ngModel)]="searchForecast.toDaily" #toDaily="ngModel" [minDate]="startDate"
+                        [maxDate]="endDate">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div *ngIf="showWeeklyPicker">
+                <div class="form-group">
+                    <label>Select week start Day</label>
+                    <select class="form-control" [(ngModel)]="selectedValue" (ngModelChange)='changeSelection($event)'
+                        name="weekDays" id="weekDays">
+                        <option value=1>Monday</option>
+                        <option value=2>Tuesday</option>
+                        <option value=3>Wednesday</option>
+                        <option value=4>Thursday</option>
+                        <option value=5>Friday</option>
+                        <option value=6>saturday</option>
+                        <option value=7>Sunday</option>
+                    </select>
+                </div>
             </div> -->
-            <div *ngIf="showDailyPicker">
-                <div class="form-group">
-                    <label>From</label>
-                    <input class="form-control" name="fromDaily" [(ngModel)]="searchForecast.fromDaily" #fromDaily="ngModel" type="date"
-                        value="2011-08-19" id="example-date-input">
-                </div>
-                <div class="form-group">
-                    <label>To</label>
-                    <input class="form-control" name="toDaily" [(ngModel)]="searchForecast.toDaily" #toDaily="ngModel" type="date"
-                        value="2011-08-19" id="example-date-input">
-                </div>
-            </div>
-            <div *ngIf="showMonthlyPicker">
-                <div class="form-group">
-                    <label>From</label>
-                    <input class="form-control" type="month" value="2011-08" id="example-month-input" name="fromMonth" [(ngModel)]="searchForecast.fromMonth" #fromMonth="ngModel">
-                </div>
-                <div class="form-group">
-                    <label>To</label>
-                    <input class="form-control" type="month" value="2011-08" id="example-month-input" name="toMonth" [(ngModel)]="searchForecast.toMonth" #toMonth="ngModel">
+
+            <div class="form-group" *ngIf="selectedValue !== '' && showWeeklyPicker">
+                <label>From</label>
+                <div class="input-group calendar-style">
+                    <input class="form-control" placeholder="yyyy-mm-dd" [markDisabled]="isDisabledFromDate"
+                        name="fromWeekly" [(ngModel)]="searchForecast.fromWeekly" #fromWeekly="ngModel" ngbDatepicker
+                        #d="ngbDatepicker">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+                    </div>
                 </div>
             </div>
-            <div *ngIf="showWeeklyPicker">
-                <div class="form-group">
-                    <label for="example-week-input" class="col-2 col-form-label">From</label>
-                    <input class="form-control" type="week" value="2011-W33" id="example-week-input" name="fromWeek" [(ngModel)]="searchForecast.fromWeek" #fromWeek="ngModel">
-                </div>
-                <div class="form-group">
-                    <label for="example-week-input" class="col-2 col-form-label">To</label>
-                    <input class="form-control" type="week" value="2011-W33" id="example-week-input" name="toWeek" [(ngModel)]="searchForecast.toWeek" #toWeek="ngModel">
+
+            <div class="form-group" *ngIf="selectedValue !== '' && showWeeklyPicker">
+                <label>To</label>
+                <div class="input-group calendar-style">
+                    <input class="form-control" placeholder="yyyy-mm-dd" [markDisabled]="isDisabledToDate"
+                        name="toWeekly" [(ngModel)]="searchForecast.toWeekly" #toWeekly="ngModel" ngbDatepicker
+                        #d="ngbDatepicker">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+                    </div>
                 </div>
             </div>
+
             <button type="submit" class="btn btn-outline-dark mb-5"
                 (click)="onSubmit(forecastForm.value);">Submit</button>
         </form>
@@ -83,32 +110,6 @@
         </div>
         <div class="zui-wrapper">
             <div class="zui-scroller">
-                <!-- <table class="excel zui-table">
-                    <thead>
-                        <tr>
-                            <th *ngFor="let column of gridData; let columnIndex = index"
-                                [ngClass]="{'text-left zui-sticky-col': columnIndex === 0}">
-                                {{column.planBucket}}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td *ngFor="let row of gridData; let rowIndex = index;"
-                                [ngClass]="{'zui-sticky-col': rowIndex === 0}">
-                                <ng-container *ngIf="rowIndex==0;else elseBlock">
-                                    <p>
-                                        {{row.forecast}}
-                                    </p>
-                                </ng-container>
-                                <ng-template #elseBlock>
-                                    {{row.forecast}}
-                                </ng-template>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table> -->
-
                 <table class="excel zui-table">
                     <thead>
                         <tr>
