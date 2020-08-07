@@ -119,6 +119,8 @@ export class ForecastPrototypeComponent implements OnInit {
   startDate: any;
   endDate: any;
   mySpreadsheet: any;
+  searchData: any;
+  formSubmit = false;
 
   datePickerConfig = {
     format: 'DD-MM-YYYY',
@@ -174,6 +176,12 @@ export class ForecastPrototypeComponent implements OnInit {
       this.fileList.forEach((element, index) => {
         formData.append('file', element);
       });
+      // tslint:disable-next-line:max-line-length
+      formData.append('fromDate', this.searchData.fromDate.day +  '/' + this.searchData.fromDate.month + '/' + this.searchData.fromDate.year);
+      formData.append('modelId', '001');
+      formData.append('perInd', this.searchData.period === 'Daily' ? 'D' : 'W');
+      formData.append('toDate', this.searchData.toDate.day +  '/' + this.searchData.toDate.month +  '/' + this.searchData.toDate.year);
+
       this.shared.uploadExcel(formData).then(res => {
         this.gridData = [];
         this.gridData = res;
@@ -267,8 +275,8 @@ export class ForecastPrototypeComponent implements OnInit {
   }
 
   changeSelection(event) {
-    this.searchForecast.fromWeekly = null;
-    this.searchForecast.toWeekly = null;
+    this.searchForecast.fromDate = null;
+    this.searchForecast.toDate = null;
   }
 
   isDisabledFromDate = (date: NgbDateStruct) => {
@@ -297,95 +305,29 @@ export class ForecastPrototypeComponent implements OnInit {
       const end = this.planHorizon.toDate.split('/');
       this.startDate = {year: Number(start[2]), month: Number(start[1]), day: Number(start[0])};
       this.endDate = {year: Number(end[2]), month: Number(end[1]), day: Number(end[0])};
+      console.log('startDate', this.startDate);
+      console.log('end date', this.endDate);
     }).catch(error => {
     });
   }
 
   onSubmit(value) {
-    this.gridData = [];
-    this.gridData = [
-      {
-        planBucket: 'WK.01 2020',
-        forecast: 234
-      },
-      {
-        planBucket: 'WK.02 2020',
-        forecast: 565
-      },
-      {
-        planBucket: 'WK.03 2020',
-        forecast: 676
-      },
-      {
-        planBucket: 'WK.04 2020',
-        forecast: 90
-      },
-      {
-        planBucket: 'WK.05 2020',
-        forecast: 567
-      },
-      {
-        planBucket: 'WK.06 2020',
-        forecast: 78
-      },
-      {
-        planBucket: 'WK.07 2020',
-        forecast: 67
-      },
-      {
-        planBucket: 'WK.08 2020',
-        forecast: 12
-      },
-      {
-        planBucket: 'WK.08 2020',
-        forecast: 56
-      },
-      {
-        planBucket: 'WK.10 2020',
-        forecast: 9
-      },
-      {
-        planBucket: 'WK.11 2020',
-        forecast: 67
-      },
-      {
-        planBucket: 'WK.12 2020',
-        forecast: 445
-      },
-      {
-        planBucket: 'WK.13 2020',
-        forecast: 677
-      },
-      {
-        planBucket: 'WK.14 2020',
-        forecast: 78
-      },
-      {
-        planBucket: 'WK.15 2020',
-        forecast: 56
-      },
-      {
-        planBucket: 'WK.16 2020',
-        forecast: 976
-      },
-      {
-        planBucket: 'WK.17 2020',
-        forecast: 78
-      },
-      {
-        planBucket: 'WK.18 2020',
-        forecast: 67
-      },
-      {
-        planBucket: 'WK.19 2020',
-        forecast: 3
-      },
-      {
-        planBucket: 'WK.20 2020',
-        forecast: 78
-      }
-    ];
-    console.log('value', value);
-    console.log('date', this.model);
+    this.formSubmit = true;
+    this.searchData = value;
+    const json = {
+      fromDate: value.fromDate.day +  '/' + value.fromDate.month + '/' + value.fromDate.year,
+      locNo: '',
+      matNo: '',
+      modelId: '001',
+      perInd: value.period === 'Daily' ? 'D' : 'W',
+      toDate: value.toDate.day +  '/' + value.toDate.month +  '/' + value.toDate.year
+    };
+    this.shared.getForecast(json).then(res => {
+      this.gridData = [];
+      this.gridData = res;
+    }).catch(error => {
+
+    });
   }
+
 }

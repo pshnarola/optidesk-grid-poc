@@ -59,4 +59,9 @@ export class SharedService {
     const url = environment.DOMAIN.URL + 'plan-horizons/_search';
     return this.http.post<any>(url, body).toPromise();
   }
+
+  getForecast(body) {
+    const url = environment.DOMAIN.URL + 'forecasts/_search';
+    return this.http.post<any>(url, body).toPromise();
+  }
 }
