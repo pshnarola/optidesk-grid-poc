@@ -55,6 +55,120 @@ export class CustomComponent implements OnInit {
         });
         this.loadData = true;
         this.generateLineChart();
+        this.multipleChart();
+    }
+
+    multipleChart() {
+        console.log('chartData', this.chartData);
+        // const data = this.chartData;
+        const dataset = [
+            ['A', 703, 1902],
+            ['B', 1473, 3341],
+            ['C', 863, 1935],
+            ['D', 1494, 3008],
+            ['E', 965, 1743],
+            ['F', 568, 1271],
+            ['G', 189, 626],
+            ['H', 464, 1064],
+            ['I', 731, 1443],
+            ['J', 306, 630],
+            ['K', 899, 2556],
+            ['L', 231, 880],
+            ['M', 262, 589],
+            ['N', 429, 1497],
+            ['O', 322, 749],
+            ['P', 315, 720],
+            ['Q', 228, 522],
+            ['R', 436, 1391],
+            ['S', 287, 613],
+            ['T', 419, 932],
+            ['U', 296, 612],
+            ['V', 343, 855]
+        ];
+        // tslint:disable-next-line:one-variable-per-declaration
+        const margin = { top: 20, right: 20, bottom: 30, left: 40 },
+            width = 960,
+            height = 400;
+
+        const xScale = d3.scaleBand()
+            .rangeRound([0, width])
+            .padding(0.1)
+            .domain(dataset.map((d) => {
+                return d[0];
+            }));
+        const yScale = d3.scaleLinear()
+            .rangeRound([height, 0])
+            .domain([0, d3.max(dataset, ((d) => {
+                return d[2];
+            }))]);
+
+        const svg = d3.select('body').append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom);
+
+        const g = svg.append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        // axis-x
+        g.append('g')
+            .attr('class', 'axis axis--x')
+            .attr('transform', 'translate(0,' + height + ')')
+            .call(d3.axisBottom(xScale));
+
+        // axis-y
+        g.append('g')
+            .attr('class', 'axis axis--y')
+            .call(d3.axisLeft(yScale));
+
+        const bar = g.selectAll('rect')
+            .data(dataset)
+            .enter().append('g');
+
+        // bar chart
+        bar.append('rect')
+            .attr('x', (d) => xScale(d[0]))
+            .attr('y', (d) => yScale(d[2]))
+            .attr('width', xScale.bandwidth())
+            .attr('height', (d) => height - yScale(d[2]))
+            .attr('class', (d) => {
+                const s = 'bar ';
+                if (d[1] < 400) {
+                    return s + 'bar1';
+                } else if (d[1] < 800) {
+                    return s + 'bar2';
+                } else {
+                    return s + 'bar3';
+                }
+            });
+
+        // labels on the bar chart
+        bar.append('text')
+            .attr('dy', '1.3em')
+            .attr('x', (d) => xScale(d[0]) + xScale.bandwidth() / 2)
+            .attr('y', (d) => yScale(d[2]))
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'sans-serif')
+            .attr('font-size', '11px')
+            .attr('fill', 'black')
+            .text((d) => {
+                return d[2];
+            });
+
+        // line chart
+        const line = d3.line()
+            .x( (d, i) => xScale(d[0]) + xScale.bandwidth() / 2)
+            .y( (d) => yScale(d[1]))
+            .curve(d3.curveMonotoneX);
+
+        bar.append('path')
+            .attr('class', 'line') // Assign a class for styling
+            .attr('d', line(dataset)); // 11. Calls the line generator
+
+        bar.append('circle') // Uses the enter().append() method
+            .attr('class', 'dot') // Assign a class for styling
+            .attr('cx',  (d, i) => xScale(d[0]) + xScale.bandwidth() / 2)
+            .attr('cy',  (d) => yScale(d[1]))
+            .attr('r', 5);
     }
 
     generateLineChart() {
@@ -222,7 +336,7 @@ export class CustomComponent implements OnInit {
 
     onBlurMethod(row, column) {
         const planDate = column.planDate;
-        const tempArray = [{planDate, keyFig: row.keyFig, quantity: Number(this.pshDataSet[planDate][row.keyFig])}];
+        const tempArray = [{ planDate, keyFig: row.keyFig, quantity: Number(this.pshDataSet[planDate][row.keyFig]) }];
         this.shared.updatePlanData(tempArray).then(res => {
             res.forEach(response => {
                 this.tableDetails.forEach(details => {
