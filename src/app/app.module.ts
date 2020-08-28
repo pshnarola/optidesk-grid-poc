@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { CustomUiComponent } from './custom-ui/custom-ui.component';
 import { CustomExcelComponent } from './custom-excel/custom-excel.component';
 import { ForecastPrototypeComponent } from './forecast-prototype/forecast-prototype.component';
+import { PlanViewNewApproachComponent } from './plan-view-new-approach/plan-view-new-approach.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ForecastPrototypeComponent } from './forecast-prototype/forecast-protot
     CustomComponent,
     CustomUiComponent,
     CustomExcelComponent,
-    ForecastPrototypeComponent
+    ForecastPrototypeComponent,
+    PlanViewNewApproachComponent
   ],
   imports: [
     BrowserModule,

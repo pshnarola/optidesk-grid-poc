@@ -8,6 +8,7 @@ import { CustomComponent } from './custom/custom.component';
 import { CustomUiComponent } from './custom-ui/custom-ui.component';
 import { CustomExcelComponent } from './custom-excel/custom-excel.component';
 import { ForecastPrototypeComponent } from './forecast-prototype/forecast-prototype.component';
+import { PlanViewNewApproachComponent } from './plan-view-new-approach/plan-view-new-approach.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: 'plan-view-approach-2',
     component: PlanviewAlternativeComponent
+  },
+  {
+    path: 'plan-view-approach-3',
+    component: PlanViewNewApproachComponent
   },
   {
     path: 'handsontable',
