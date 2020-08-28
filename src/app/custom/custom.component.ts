@@ -200,8 +200,9 @@ export class CustomComponent implements OnInit {
             .y(d => y(d.total));
 
         // scale the range of the data
+        const ignoreScale = ['timescale', 'totDemand'];
         z.domain(d3.keys(this.chartData[0]).filter(key => {
-            return key !== 'timescale';
+            return ignoreScale.indexOf(key) === -1;
         }));
 
         const trends = z.domain().map(name => {
@@ -241,6 +242,40 @@ export class CustomComponent implements OnInit {
             .attr('x', (d, i) => (i) * 220 + 20)
             .attr('y', (d, i) => height + 70 + 10)
             .text((d) => trendsText[d.name]);
+
+        const bar = g.selectAll('rect')
+            .data(this.chartData)
+            .enter().append('g');
+
+        // bar chart
+        bar.append('rect')
+            .attr('x', (d) => x(d.timescale) - 15)
+            .attr('y', (d) => y(d.totDemand))
+            .attr('width', 30)
+            .attr('height', (d) => height - y(d.totDemand))
+            .attr('class', (d) => {
+                const s = 'bar ';
+                if (d[1] < 400) {
+                    return s + 'bar1';
+                } else if (d[1] < 800) {
+                    return s + 'bar2';
+                } else {
+                    return s + 'bar3';
+                }
+            });
+
+        // labels on the bar chart
+        bar.append('text')
+            .attr('dy', '1.3em')
+            .attr('x', (d) => x(d.timescale) + x.bandwidth() / 2)
+            .attr('y', (d) => y(d.totDemand))
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'sans-serif')
+            .attr('font-size', '11px')
+            .attr('fill', 'black')
+            .text((d) => {
+                return d.totDemand;
+            });
 
 
         // Draw the line
